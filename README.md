@@ -1,4 +1,5 @@
 Realizar un juego similar al "SUPER MARIO"
+
 REQUISITOS 
 MÍNIMOS:
 1, Movimiento horizontal del jugador, Saltando obstáculos fijos y móviles
