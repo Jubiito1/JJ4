@@ -1,7 +1,9 @@
 Realizar un juego similar al "SUPER MARIO"
 
 REQUISITOS 
+
 MÍNIMOS:
+
 1, Movimiento horizontal del jugador, Saltando obstáculos fijos y móviles
 2 Movimiento de los enemigos (horizontal y vertical)
 3. Contador de puntos
@@ -13,5 +15,6 @@ MÍNIMOS:
 
 
  ESPERADOS: 
+ 
 9. 5 Diferentes enemigos (forma y cantidad de vidas)
 10. Niveles10 o +
