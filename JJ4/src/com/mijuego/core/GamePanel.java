@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import com.mijuego.utils.InputManager;
+
 public class GamePanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
@@ -24,6 +26,11 @@ public class GamePanel extends JPanel {
             BufferedImage.TYPE_INT_RGB
         );
         g2d = canvas.createGraphics();
+        
+     // 🔹 Configurar teclado
+        setFocusable(true);          // hace que el panel pueda recibir eventos de teclado
+        requestFocus();              // solicita que tenga el foco al iniciar
+        addKeyListener(new InputManager()); // agrega el KeyListener
     }
 
     @Override

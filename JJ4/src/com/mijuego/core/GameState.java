@@ -1,5 +1,7 @@
 package com.mijuego.core;
 
-public class GameState {
-
+public enum GameState {
+    MENU,
+    PLAYING,
+    PAUSED
 }

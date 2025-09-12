@@ -6,7 +6,7 @@ public class GS {
     public static final int BASE_HEIGHT = 1080;
 
     // Valor de escala (ej. 1 = 1920x1080, 2 = 960x540, 3 = 640x360)
-    public static int ScaleValue = 1;
+    private static int ScaleValue = 1;
 
     // Método centralizado de escalado
     public static int SC(int in) {
@@ -21,4 +21,14 @@ public class GS {
     public static int getVirtualHeight() {
         return SC(BASE_HEIGHT);
     }
+    
+    public static void setScaleValue(int nuevoValor) {
+    	ScaleValue = nuevoValor;
+    }
+    
+    public static int getScaleValue() {
+    	return ScaleValue;
+    }
+    
+    
 }
