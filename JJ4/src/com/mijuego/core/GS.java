@@ -6,7 +6,7 @@ public class GS {
     public static final int BASE_HEIGHT = 1080;
 
     // Valor de escala (ej. 1 = 1920x1080, 2 = 960x540, 3 = 640x360)
-    private static int ScaleValue = 1;
+    private static int ScaleValue = 2;
 
     // Método centralizado de escalado
     public static int SC(int in) {

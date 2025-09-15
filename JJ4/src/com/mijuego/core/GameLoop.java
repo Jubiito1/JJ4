@@ -66,20 +66,22 @@ public class GameLoop implements Runnable {
     private void update() {
         switch (gameState) {
             case MENU:
-                // actualizar menú más adelante
+            	if (InputManager.isUp()) {
+                    gameState = GameState.PLAYING;
+                }
                 break;
 
             case PLAYING:
 
                 // ESC → pausa
-                if (InputManager.isEsc()) {
+                if (InputManager.isEsc() && gameState == GameState.PLAYING) {
                     gameState = GameState.PAUSED;
                 }
                 break;
 
             case PAUSED:
                 // ESC → volver a jugar
-                if (InputManager.isEsc()) {
+                if (InputManager.isEsc() && gameState == GameState.PAUSED) {
                     gameState = GameState.PLAYING;
                 }
 

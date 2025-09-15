@@ -17,6 +17,8 @@ public class GameMain {
 
         // Iniciar loop
         GameLoop gameLoop = new GameLoop(panel);
+        panel.setGameLoop(gameLoop);
         gameLoop.start();
+
     }
 }

@@ -7,6 +7,8 @@ public class InputManager implements KeyListener {
 
     // Array que guarda el estado de cada tecla
     private static boolean[] keys = new boolean[256];
+    private static boolean escProcessed = false;
+
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -49,4 +51,25 @@ public class InputManager implements KeyListener {
     public static boolean isEsc() {
         return keys[KeyEvent.VK_ESCAPE];
     }
+    
+    public static boolean isEscJustPressed() {
+        if (escPressed && !escProcessed) {
+            escProcessed = true; // marcamos que ya la usamos
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            escPressed = false;
+            escProcessed = false; // importante
+        }
+        // otras teclas...
+    }
+
+
+    
+    
 }
