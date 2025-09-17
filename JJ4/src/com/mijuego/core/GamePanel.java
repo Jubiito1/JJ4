@@ -14,6 +14,8 @@ public class GamePanel extends JPanel {
     // Canvas virtual donde dibujamos
     private BufferedImage canvas;
     private Graphics2D g2d;
+    private LevelManager levelManager;
+
 
     public GamePanel() {
         setBackground(Color.BLACK);
@@ -31,6 +33,8 @@ public class GamePanel extends JPanel {
         setFocusable(true);          // hace que el panel pueda recibir eventos de teclado
         requestFocus();              // solicita que tenga el foco al iniciar
         addKeyListener(new InputManager()); // agrega el KeyListener
+        
+        levelManager = new LevelManager();
     }
 
     @Override
@@ -40,6 +44,10 @@ public class GamePanel extends JPanel {
         // 🔴 Dibujamos en el canvas virtual (resolución interna)
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, GS.getVirtualWidth(), GS.getVirtualHeight());
+        
+        if (levelManager.getCurrentTileMap() != null) {
+            levelManager.getCurrentTileMap().draw(g2d);
+        }
 
         // 🔴 Dibujamos el canvas escalado a toda la pantalla real
         g.drawImage(canvas, 0, 0, getWidth(), getHeight(), null);

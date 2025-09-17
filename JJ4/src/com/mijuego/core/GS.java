@@ -2,10 +2,9 @@ package com.mijuego.core;
 
 public class GS {
     // Resolución base en la que diseñamos el juego
-    public static final int BASE_WIDTH = 320;
-    public static final int BASE_HEIGHT = 180;
+    public static final int BASE_WIDTH = 640;
+    public static final int BASE_HEIGHT = 360;
 
-    // Valor de escala (ej. 1 = 1920x1080, 2 = 960x540, 3 = 640x360)
     private static int ScaleValue = 3;
 
     // Método centralizado de escalado
