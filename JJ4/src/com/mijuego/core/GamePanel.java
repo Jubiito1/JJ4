@@ -41,9 +41,6 @@ public class GamePanel extends JPanel {
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, GS.getVirtualWidth(), GS.getVirtualHeight());
 
-        g2d.setColor(Color.RED);
-        g2d.fillRect(GS.SC(100), GS.SC(100), GS.SC(200), GS.SC(200));
-
         // 🔴 Dibujamos el canvas escalado a toda la pantalla real
         g.drawImage(canvas, 0, 0, getWidth(), getHeight(), null);
     }
