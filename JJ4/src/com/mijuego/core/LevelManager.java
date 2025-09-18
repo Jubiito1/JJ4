@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 public class LevelManager {
 
-    private int currentLevel = 3;
+    private int currentLevel = 1;
     private TileMap currentTileMap;
     private Tile[] tileset;
 
