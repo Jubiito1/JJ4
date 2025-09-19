@@ -9,7 +9,7 @@ public class GameMain {
         GamePanel panel = new GamePanel();
 
         // 🔹 Crear el player y agregarlo al panel
-        Player player = new Player(GS.SC(100), GS.SC(100), GS.SC(20), GS.SC(40), 100, panel.getLevelManager().getCurrentTileMap());
+        Player player = new Player(GS.SC(100), GS.SC(100), GS.SC(20), GS.SC(20), 100, panel.getLevelManager().getCurrentTileMap());
         panel.addEntity(player);
 
         // Configurar la ventana

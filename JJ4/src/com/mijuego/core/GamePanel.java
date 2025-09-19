@@ -16,6 +16,7 @@ public class GamePanel extends JPanel {
     private BufferedImage canvas;
     private Graphics2D g2d;
     private LevelManager levelManager;
+    private Camera camera;
 
     private List<Entities> entities;
 
@@ -36,6 +37,8 @@ public class GamePanel extends JPanel {
 
         levelManager = new LevelManager();
         entities = new ArrayList<>();
+        
+        camera = new Camera(GS.getVirtualWidth(), GS.getVirtualHeight(), levelManager.getCurrentTileMap());
     }
 
     public void addEntity(Entities e) {
@@ -49,6 +52,10 @@ public class GamePanel extends JPanel {
     public LevelManager getLevelManager() {
         return levelManager;
     }
+    
+    public Camera getCamera() {
+        return camera;
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -58,11 +65,11 @@ public class GamePanel extends JPanel {
         g2d.fillRect(0, 0, GS.getVirtualWidth(), GS.getVirtualHeight());
 
         if (levelManager.getCurrentTileMap() != null) {
-            levelManager.getCurrentTileMap().draw(g2d);
+            levelManager.getCurrentTileMap().draw(g2d, camera);
         }
 
         for (Entities e : entities) {
-            e.draw(g2d);
+            e.draw(g2d, camera);
         }
         
         g.drawImage(canvas, 0, 0, getWidth(), getHeight(), null);

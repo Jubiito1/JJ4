@@ -3,6 +3,8 @@ package com.mijuego.entities;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import com.mijuego.core.Camera;
+
 public abstract class Entities {
     protected double x, y;           // posición
     protected int width, height;     // tamaño
@@ -21,7 +23,7 @@ public abstract class Entities {
     public abstract void update();
 
     // 🔹 Dibujar en pantalla
-    public abstract void draw(Graphics2D g);
+    public abstract void draw(Graphics2D g, Camera camera);
 
     // 🔹 Rectángulo para colisiones
     public Rectangle getBounds() {

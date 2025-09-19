@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mijuego.core.Camera;
+
 public class TileMap {
     private int rows, cols;
     private int[][] map;    // IDs de tiles en cada celda
@@ -40,15 +42,16 @@ public class TileMap {
         }
     }
 
-    public void draw(Graphics2D g) {
+    public void draw(Graphics2D g, Camera camera) {
         int ts = Tile.SIZE;
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 int id = map[r][c];
-                if (id == 0) continue; // aire
+                if (id == 0) continue;
+
                 Tile t = tileset[id];
-                int x = c * ts;
-                int y = r * ts;
+                int x = c * ts - camera.getX();
+                int y = r * ts - camera.getY();
                 t.draw(g, x, y);
             }
         }

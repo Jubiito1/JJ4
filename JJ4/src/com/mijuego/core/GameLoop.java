@@ -2,6 +2,7 @@ package com.mijuego.core;
 
 import com.mijuego.utils.InputManager;
 import com.mijuego.entities.Entities;
+import com.mijuego.entities.Player;
 
 public class GameLoop implements Runnable {
 
@@ -75,6 +76,11 @@ public class GameLoop implements Runnable {
                 // 🔹 Actualizar todas las entidades
                 for (Entities e : panel.getEntities()) {
                     e.update();
+                }
+                
+                Entities player = panel.getEntities().get(0);
+                if (player instanceof Player) {
+                    panel.getCamera().follow((Player) player);
                 }
                 break;
 

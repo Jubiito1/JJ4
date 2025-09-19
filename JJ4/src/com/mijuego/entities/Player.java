@@ -8,6 +8,7 @@ import com.mijuego.map.TileMap;
 import com.mijuego.utils.CollisionManager;
 import com.mijuego.map.Tile;
 import com.mijuego.core.GS;
+import com.mijuego.core.Camera;
 
 public class Player extends Entities {
 
@@ -64,8 +65,12 @@ public class Player extends Entities {
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    public void draw(Graphics2D g, Camera camera) {
         g.setColor(color);
-        g.fillRect((int)x, (int)y, width, height);
+        g.fillRect(
+            (int)(x - camera.getX()),
+            (int)(y - camera.getY()),
+            width, height
+        );
     }
 }
