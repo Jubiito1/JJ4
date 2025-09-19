@@ -14,6 +14,8 @@ public class Player extends Entities {
 
     private TileMap map;          // mapa actual para colisiones
     private Color color = Color.BLUE;
+    private int damageCooldown = 0; // frames restantes hasta poder recibir daño otra vez
+    private final int DAMAGE_COOLDOWN_FRAMES = 20; // 20 frames = 1/3 segundo aprox a 60FPS
 
     private boolean onGround = false;
 
@@ -28,6 +30,8 @@ public class Player extends Entities {
 
     @Override
     public void update() {
+    	
+    	if (damageCooldown > 0) damageCooldown--;
         // 🔹 Movimiento horizontal
         dx = 0;
         if (InputManager.isLeft())  dx = -MOVE_SPEED;
@@ -63,10 +67,22 @@ public class Player extends Entities {
             }
         }
     }
+    
+    public void takeDamage(int amount) {
+        if (damageCooldown == 0) {
+            damage(amount);
+            damageCooldown = DAMAGE_COOLDOWN_FRAMES;
+        }
+    }
+
 
     @Override
     public void draw(Graphics2D g, Camera camera) {
-        g.setColor(color);
+        if (!isAlive()) {
+            g.setColor(Color.RED); // jugador muerto
+        } else {
+            g.setColor(color); // azul normal
+        }
         g.fillRect(
             (int)(x - camera.getX()),
             (int)(y - camera.getY()),

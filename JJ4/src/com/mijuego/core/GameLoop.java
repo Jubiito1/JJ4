@@ -3,6 +3,8 @@ package com.mijuego.core;
 import com.mijuego.utils.InputManager;
 import com.mijuego.entities.Entities;
 import com.mijuego.entities.Player;
+import com.mijuego.entities.enemies.Goomba;
+
 
 public class GameLoop implements Runnable {
 
@@ -77,10 +79,26 @@ public class GameLoop implements Runnable {
                 for (Entities e : panel.getEntities()) {
                     e.update();
                 }
-                
-                Entities player = panel.getEntities().get(0);
-                if (player instanceof Player) {
-                    panel.getCamera().follow((Player) player);
+
+                // Chequear colisiones jugador ↔ enemigos
+                Player player = null;
+                for (Entities e : panel.getEntities()) {
+                    if (e instanceof Player) {
+                        player = (Player) e;
+                        break;
+                    }
+                }
+                if (player != null) {
+                    for (Entities e : panel.getEntities()) {
+                        if (e instanceof Goomba) {
+                            ((Goomba) e).checkPlayerCollision(player);
+                        }
+                    }
+                }
+
+                // Actualizar cámara
+                if (player != null) {
+                    panel.getCamera().follow(player);
                 }
                 break;
 

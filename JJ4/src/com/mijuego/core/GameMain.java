@@ -11,7 +11,7 @@ public class GameMain {
         // 🔹 Crear el player y agregarlo al panel
         Player player = new Player(GS.SC(100), GS.SC(100), GS.SC(20), GS.SC(20), 100, panel.getLevelManager().getCurrentTileMap());
         panel.addEntity(player);
-
+        
         // Configurar la ventana
         JFrame window = new JFrame("JJ4");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

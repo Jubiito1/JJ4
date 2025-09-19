@@ -65,6 +65,11 @@ public class TileMap {
         int id = map[row][col];
         return tileset[id].isSolid();
     }
+    
+    public void setTileId(int row, int col, int id) {
+        if (row < 0 || row >= rows || col < 0 || col >= cols) return;
+        map[row][col] = id;
+    }
 
     // Getters
     public int getRows() { return rows; }

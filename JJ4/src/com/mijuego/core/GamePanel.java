@@ -19,6 +19,7 @@ public class GamePanel extends JPanel {
     private Camera camera;
 
     private List<Entities> entities;
+    
 
     public GamePanel() {
         setBackground(Color.BLACK);
@@ -39,6 +40,10 @@ public class GamePanel extends JPanel {
         entities = new ArrayList<>();
         
         camera = new Camera(GS.getVirtualWidth(), GS.getVirtualHeight(), levelManager.getCurrentTileMap());
+        
+        for (Entities e : levelManager.getEnemies()) {
+            addEntity(e);
+        }
     }
 
     public void addEntity(Entities e) {

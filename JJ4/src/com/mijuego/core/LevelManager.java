@@ -3,19 +3,25 @@ package com.mijuego.core;
 import com.mijuego.map.Tile;
 import com.mijuego.map.TileMap;
 import com.mijuego.utils.ResourceManager;
+import com.mijuego.entities.Entities;
+import com.mijuego.entities.enemies.Goomba;
 
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LevelManager {
 
     private int currentLevel = 1;
     private TileMap currentTileMap;
     private Tile[] tileset;
+    private List<Entities> enemies; // Lista de enemigos del nivel
 
     public LevelManager() {
-        initTileset();       // Inicializa los tipos de tiles
-        loadLevel(currentLevel); // Carga el primer nivel
+        enemies = new ArrayList<>();
+        initTileset();            // Inicializa los tipos de tiles
+        loadLevel(currentLevel);  // Carga el primer nivel
     }
 
     // Inicializa los tiles básicos
@@ -35,10 +41,27 @@ public class LevelManager {
     // Carga un nivel por número
     public void loadLevel(int levelNumber) {
         try {
+            enemies.clear(); // Limpiar enemigos del nivel anterior
+
             String path = "/assets/levels/level" + levelNumber + ".txt";
             InputStream is = ResourceManager.loadText(path);
             currentTileMap = new TileMap(tileset);
             currentTileMap.loadFromStream(is);
+
+            // --- Crear enemigos según el mapa ---
+            for (int r = 0; r < currentTileMap.getRows(); r++) {
+                for (int c = 0; c < currentTileMap.getCols(); c++) {
+                    int tileId = currentTileMap.getTileId(r, c);
+                    if (tileId == 2) { // 2 = Goomba
+                        Goomba g = new Goomba(c * Tile.SIZE, r * Tile.SIZE, currentTileMap);
+                        enemies.add(g);
+
+                        // Reemplazar 2 por aire en el mapa para no dibujarlo
+                        currentTileMap.setTileId(r, c, 0);
+                    }
+                }
+            }
+
             currentLevel = levelNumber;
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,6 +76,11 @@ public class LevelManager {
     // Devuelve el TileMap actual para que GamePanel lo dibuje
     public TileMap getCurrentTileMap() {
         return currentTileMap;
+    }
+
+    // Lista de enemigos del nivel
+    public List<Entities> getEnemies() {
+        return enemies;
     }
 
     public int getCurrentLevel() {
