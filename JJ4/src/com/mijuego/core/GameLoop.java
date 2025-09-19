@@ -1,6 +1,7 @@
 package com.mijuego.core;
 
 import com.mijuego.utils.InputManager;
+import com.mijuego.entities.Entities;
 
 public class GameLoop implements Runnable {
 
@@ -11,10 +12,7 @@ public class GameLoop implements Runnable {
     private final double TIME_PER_FRAME = 1000000000.0 / FPS;
 
     private GamePanel panel;
-
-    // 🔹 Estado actual del juego
-    private GameState gameState = GameState.MENU;
-
+    private GameState gameState = GameState.PLAYING;
 
     public GameLoop(GamePanel panel) {
         this.panel = panel;
@@ -49,8 +47,8 @@ public class GameLoop implements Runnable {
             lastTime = now;
 
             while (delta >= 1) {
-                update();
-                panel.repaint();
+                update();        
+                panel.repaint(); 
                 delta--;
                 frames++;
             }
@@ -66,27 +64,24 @@ public class GameLoop implements Runnable {
     private void update() {
         switch (gameState) {
             case MENU:
-                // actualizar menú más adelante
+                // Lógica futura del menú
                 break;
 
             case PLAYING:
-
-                // ESC → pausa
                 if (InputManager.isEsc()) {
                     gameState = GameState.PAUSED;
+                }
+
+                // 🔹 Actualizar todas las entidades
+                for (Entities e : panel.getEntities()) {
+                    e.update();
                 }
                 break;
 
             case PAUSED:
-                // ESC → volver a jugar
                 if (InputManager.isEsc()) {
                     gameState = GameState.PLAYING;
                 }
-
-                // Botón de salir (se implementará en PauseMenu más tarde)
-                // if (InputManager.isSomeExitKey()) {
-                //     gameState = GameState.MENU; 
-                // }
                 break;
         }
     }

@@ -6,17 +6,19 @@ import java.awt.Graphics2D;
 import com.mijuego.utils.InputManager;
 import com.mijuego.map.TileMap;
 import com.mijuego.utils.CollisionManager;
+import com.mijuego.map.Tile;
+import com.mijuego.core.GS;
 
 public class Player extends Entities {
 
-    private TileMap map;      // Para poder usar colisiones con tiles
-    private Color color = Color.BLUE; // Color para dibujar el player (por ahora)
+    private TileMap map;          // mapa actual para colisiones
+    private Color color = Color.BLUE;
 
-    private boolean onGround = false; // Para manejar salto
+    private boolean onGround = false;
 
-    private final double GRAVITY = 0.5;
-    private final double JUMP_SPEED = -10;
-    private final double MOVE_SPEED = 3;
+    private final double GRAVITY = GS.DSC(0.2);
+    private final double JUMP_SPEED = GS.DSC(-5);
+    private final double MOVE_SPEED = GS.DSC(3);
 
     public Player(double x, double y, int width, int height, int health, TileMap map) {
         super(x, y, width, height, health);
@@ -39,16 +41,25 @@ public class Player extends Entities {
         // 🔹 Gravedad
         dy += GRAVITY;
 
-        // 🔹 Colisiones con el mapa
-        CollisionManager.checkTileCollision(this, map);
-
-        // 🔹 Actualizar posición
+        // 🔹 Colisiones por eje
+        CollisionManager.checkTileCollisionX(this, map);
         x += dx;
+
+        CollisionManager.checkTileCollisionY(this, map);
         y += dy;
 
-        // 🔹 Actualizar si está en el suelo
-        if (dy == 0) {
-            onGround = true;
+        // 🔹 Actualizar onGround basado en tiles sólidos debajo del jugador
+        int tileSize = Tile.SIZE;
+        int leftCol = (int)x / tileSize;
+        int rightCol = (int)(x + width - 1) / tileSize;
+        int bottomRow = (int)(y + height) / tileSize;
+
+        onGround = false;
+        for (int col = leftCol; col <= rightCol; col++) {
+            if (map.isTileSolid(bottomRow, col)) {
+                onGround = true;
+                break;
+            }
         }
     }
 

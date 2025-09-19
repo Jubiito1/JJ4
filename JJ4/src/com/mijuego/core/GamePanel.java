@@ -5,51 +5,66 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.ArrayList;
 
-import com.mijuego.utils.InputManager;
+import com.mijuego.entities.Entities;
 
 public class GamePanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    // Canvas virtual donde dibujamos
     private BufferedImage canvas;
     private Graphics2D g2d;
     private LevelManager levelManager;
 
+    private List<Entities> entities;
 
     public GamePanel() {
         setBackground(Color.BLACK);
         setDoubleBuffered(true);
 
-        // Creamos el buffer interno con la resolución virtual
         canvas = new BufferedImage(
             GS.getVirtualWidth(),
             GS.getVirtualHeight(),
             BufferedImage.TYPE_INT_RGB
         );
         g2d = canvas.createGraphics();
-        
-     // 🔹 Configurar teclado
-        setFocusable(true);          // hace que el panel pueda recibir eventos de teclado
-        requestFocus();              // solicita que tenga el foco al iniciar
-        addKeyListener(new InputManager()); // agrega el KeyListener
-        
+
+        setFocusable(true);
+        requestFocus();
+        addKeyListener(new com.mijuego.utils.InputManager());
+
         levelManager = new LevelManager();
+        entities = new ArrayList<>();
+    }
+
+    public void addEntity(Entities e) {
+        entities.add(e);
+    }
+
+    public List<Entities> getEntities() {
+        return entities;
+    }
+
+    public LevelManager getLevelManager() {
+        return levelManager;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // 🔴 Dibujamos en el canvas virtual (resolución interna)
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, GS.getVirtualWidth(), GS.getVirtualHeight());
-        
+
         if (levelManager.getCurrentTileMap() != null) {
             levelManager.getCurrentTileMap().draw(g2d);
         }
 
-        // 🔴 Dibujamos el canvas escalado a toda la pantalla real
+        for (Entities e : entities) {
+            e.draw(g2d);
+        }
+        
         g.drawImage(canvas, 0, 0, getWidth(), getHeight(), null);
     }
 }

@@ -6,10 +6,15 @@ public class GS {
     public static final int BASE_HEIGHT = 360;
 
     private static int ScaleValue = 3;
+    private static double DoubleScaleValue = ScaleValue;
 
     // Método centralizado de escalado
     public static int SC(int in) {
         return in * ScaleValue;
+    }
+    
+    public static double DSC(double in) {
+        return in * DoubleScaleValue;
     }
 
     // Resolución interna que se usará para el canvas
