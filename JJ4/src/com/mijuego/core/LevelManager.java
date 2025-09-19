@@ -1,10 +1,12 @@
 package com.mijuego.core;
 
-import com.mijuego.map.Tile;
+import com.mijuego.map.Tile; 
 import com.mijuego.map.TileMap;
 import com.mijuego.utils.ResourceManager;
 import com.mijuego.entities.Entities;
 import com.mijuego.entities.enemies.Goomba;
+import com.mijuego.entities.enemies.StalkerEnemy;
+
 
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
@@ -57,6 +59,11 @@ public class LevelManager {
                         enemies.add(g);
 
                         // Reemplazar 2 por aire en el mapa para no dibujarlo
+                        currentTileMap.setTileId(r, c, 0);
+                    }
+                    if (tileId == 3) { // 3 = Stalker
+                        StalkerEnemy s = new StalkerEnemy(c * Tile.SIZE, r * Tile.SIZE, currentTileMap);
+                        enemies.add(s);
                         currentTileMap.setTileId(r, c, 0);
                     }
                 }
