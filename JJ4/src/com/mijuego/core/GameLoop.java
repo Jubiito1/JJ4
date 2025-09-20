@@ -1,10 +1,9 @@
 package com.mijuego.core;
 
-import com.mijuego.utils.InputManager;
 import com.mijuego.entities.Entities;
 import com.mijuego.entities.Player;
 import com.mijuego.entities.enemies.Goomba;
-
+import com.mijuego.utils.InputManager;
 
 public class GameLoop implements Runnable {
 
@@ -50,8 +49,8 @@ public class GameLoop implements Runnable {
             lastTime = now;
 
             while (delta >= 1) {
-                update();        
-                panel.repaint(); 
+                update();
+                panel.repaint();
                 delta--;
                 frames++;
             }
@@ -75,19 +74,31 @@ public class GameLoop implements Runnable {
                     gameState = GameState.PAUSED;
                 }
 
+                Player player = panel.getLevelManager().getPlayer();
+
+                // 🔹 Comprobar si el player tocó la tile WIN
+                LevelManager lm = panel.getLevelManager();
+                if (player != null && lm.checkWin(player)) {
+                    lm.nextLevel();
+
+                    // Limpiar y regenerar las entidades del nuevo nivel
+                    panel.getEntities().clear();
+                    panel.getEntities().addAll(lm.getEnemies());
+                    if (lm.getPlayer() != null) {
+                        panel.getEntities().add(lm.getPlayer());
+                    }
+
+                    // Actualizar cámara con el nuevo TileMap
+                    panel.getCamera().setMap(lm.getCurrentTileMap());
+                    player = lm.getPlayer(); // actualizar referencia del player
+                }
+
                 // 🔹 Actualizar todas las entidades
                 for (Entities e : panel.getEntities()) {
                     e.update();
                 }
 
-                // Chequear colisiones jugador ↔ enemigos
-                Player player = null;
-                for (Entities e : panel.getEntities()) {
-                    if (e instanceof Player) {
-                        player = (Player) e;
-                        break;
-                    }
-                }
+                // 🔹 Chequear colisiones jugador ↔ enemigos
                 if (player != null) {
                     for (Entities e : panel.getEntities()) {
                         if (e instanceof Goomba) {
@@ -96,10 +107,11 @@ public class GameLoop implements Runnable {
                     }
                 }
 
-                // Actualizar cámara
+                // 🔹 Actualizar cámara
                 if (player != null) {
                     panel.getCamera().follow(player);
                 }
+
                 break;
 
             case PAUSED:

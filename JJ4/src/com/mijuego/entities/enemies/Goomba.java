@@ -61,7 +61,7 @@ public class Goomba extends Enemies {
     public void draw(Graphics2D g, Camera camera) {
         if (!active) return;
 
-        g.setColor(Color.ORANGE);
+        g.setColor(new Color(139, 69, 19)); // color marrón
         g.fillRect((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
     }
 

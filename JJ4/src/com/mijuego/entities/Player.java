@@ -3,19 +3,20 @@ package com.mijuego.entities;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import com.mijuego.utils.InputManager;
 import com.mijuego.map.TileMap;
-import com.mijuego.utils.CollisionManager;
 import com.mijuego.map.Tile;
+import com.mijuego.utils.CollisionManager;
+import com.mijuego.utils.InputManager;
 import com.mijuego.core.GS;
 import com.mijuego.core.Camera;
 
 public class Player extends Entities {
 
-    private TileMap map;          // mapa actual para colisiones
+    private TileMap map;
     private Color color = Color.BLUE;
+
     private int damageCooldown = 0; // frames restantes hasta poder recibir daño otra vez
-    private final int DAMAGE_COOLDOWN_FRAMES = 20; // 20 frames = 1/3 segundo aprox a 60FPS
+    private final int DAMAGE_COOLDOWN_FRAMES = 20;
 
     private boolean onGround = false;
 
@@ -67,7 +68,7 @@ public class Player extends Entities {
             }
         }
 
-        // 🔹 Chequear si el player toca un tile "mortal"
+        // 🔹 Chequear si toca tile mortal
         int topRow = (int)y / tileSize;
         for (int row = topRow; row <= bottomRow; row++) {
             for (int col = leftCol; col <= rightCol; col++) {
@@ -78,7 +79,7 @@ public class Player extends Entities {
             }
         }
     }
-    
+
     public void takeDamage(int amount) {
         if (damageCooldown == 0) {
             damage(amount);
@@ -86,13 +87,12 @@ public class Player extends Entities {
         }
     }
 
-
     @Override
     public void draw(Graphics2D g, Camera camera) {
         if (!isAlive()) {
-            g.setColor(Color.RED); // jugador muerto
+            g.setColor(Color.RED);
         } else {
-            g.setColor(color); // azul normal
+            g.setColor(color);
         }
         g.fillRect(
             (int)(x - camera.getX()),

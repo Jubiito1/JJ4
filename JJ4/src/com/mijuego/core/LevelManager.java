@@ -27,22 +27,14 @@ public class LevelManager {
 
     // Inicializa los tiles básicos
     private void initTileset() {
-        tileset = new Tile[5]; // ahora soportamos hasta el 4
+        tileset = new Tile[6]; // ahora soportamos hasta el 5
 
-        // 0 = aire
-        tileset[0] = new Tile(Tile.EMPTY);
-
-        // 1 = bloque sólido
-        tileset[1] = new Tile(Tile.SOLID);
-
-        // 2 = goomba (no se dibuja como tile, se reemplaza al cargar nivel)
-        tileset[2] = new Tile(Tile.GOOMBA);
-
-        // 3 = player (no se dibuja como tile, se reemplaza al cargar nivel)
-        tileset[3] = new Tile(Tile.PLAYER);
-
-        // 4 = tile mortal
-        tileset[4] = new Tile(Tile.KILL);
+        tileset[0] = new Tile(Tile.EMPTY);   // aire
+        tileset[1] = new Tile(Tile.SOLID);   // bloque sólido
+        tileset[2] = new Tile(Tile.GOOMBA);  // goomba (se reemplaza al cargar nivel)
+        tileset[3] = new Tile(Tile.PLAYER);  // player (se reemplaza al cargar nivel)
+        tileset[4] = new Tile(Tile.KILL);    // tile mortal
+        tileset[5] = new Tile(Tile.WIN);     // tile win amarilla
     }
 
     // Carga un nivel por número
@@ -61,17 +53,13 @@ public class LevelManager {
                 for (int c = 0; c < currentTileMap.getCols(); c++) {
                     int tileId = currentTileMap.getTileId(r, c);
 
-                    if (tileId == 2) { // 2 = Goomba
+                    if (tileId == 2) { // Goomba
                         Goomba g = new Goomba(c * Tile.SIZE, r * Tile.SIZE, currentTileMap);
                         enemies.add(g);
-                        // Reemplazar 2 por aire en el mapa para no dibujarlo
-                        currentTileMap.setTileId(r, c, 0);
-                    } 
-                    else if (tileId == 3) { // 3 = Player
-                        // Usamos el constructor correcto: (x, y, width, height, health, map)
+                        currentTileMap.setTileId(r, c, 0); // reemplazar por aire
+                    } else if (tileId == 3) { // Player
                         player = new Player(c * Tile.SIZE, r * Tile.SIZE, GS.SC(20), GS.SC(20), 100, currentTileMap);
-                        // Reemplazar 3 por aire en el mapa para no dibujarlo
-                        currentTileMap.setTileId(r, c, 0);
+                        currentTileMap.setTileId(r, c, 0); // reemplazar por aire
                     }
                 }
             }
@@ -87,22 +75,29 @@ public class LevelManager {
         loadLevel(currentLevel + 1);
     }
 
-    // Devuelve el TileMap actual para que GamePanel lo dibuje
-    public TileMap getCurrentTileMap() {
-        return currentTileMap;
+    // 🔹 Comprueba si el player toca la tile WIN
+    public boolean checkWin(Player player) {
+        if (player == null || currentTileMap == null) return false;
+
+        int tileSize = Tile.SIZE;
+        int leftCol   = (int)player.getX() / tileSize;
+        int rightCol  = (int)(player.getX() + player.getWidth() - 1) / tileSize;
+        int topRow    = (int)player.getY() / tileSize;
+        int bottomRow = (int)(player.getY() + player.getHeight() - 1) / tileSize;
+
+        for (int row = topRow; row <= bottomRow; row++) {
+            for (int col = leftCol; col <= rightCol; col++) {
+                if (currentTileMap.getTile(row, col).isWin()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
-    // Devuelve al player cargado desde el mapa
-    public Player getPlayer() {
-        return player;
-    }
-
-    // Lista de enemigos del nivel
-    public List<Entities> getEnemies() {
-        return enemies;
-    }
-
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
+    // Getters
+    public TileMap getCurrentTileMap() { return currentTileMap; }
+    public Player getPlayer() { return player; }
+    public List<Entities> getEnemies() { return enemies; }
+    public int getCurrentLevel() { return currentLevel; }
 }
