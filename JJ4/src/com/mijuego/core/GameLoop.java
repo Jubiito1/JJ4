@@ -1,10 +1,9 @@
 package com.mijuego.core;
 
-import com.mijuego.utils.InputManager; 
+import com.mijuego.utils.InputManager;
 import com.mijuego.entities.Entities;
 import com.mijuego.entities.Player;
 import com.mijuego.entities.enemies.Goomba;
-import com.mijuego.entities.enemies.StalkerEnemy;
 
 
 public class GameLoop implements Runnable {
@@ -93,9 +92,6 @@ public class GameLoop implements Runnable {
                     for (Entities e : panel.getEntities()) {
                         if (e instanceof Goomba) {
                             ((Goomba) e).checkPlayerCollision(player);
-                        }
-                        if (e instanceof StalkerEnemy) {
-                            ((StalkerEnemy) e).checkPlayerCollision(player);
                         }
                     }
                 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.mijuego.entities.Entities;
+import com.mijuego.entities.Player; // <- IMPORT NECESARIO
 
 public class GamePanel extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -19,7 +20,6 @@ public class GamePanel extends JPanel {
     private Camera camera;
 
     private List<Entities> entities;
-    
 
     public GamePanel() {
         setBackground(Color.BLACK);
@@ -36,13 +36,22 @@ public class GamePanel extends JPanel {
         requestFocus();
         addKeyListener(new com.mijuego.utils.InputManager());
 
+        // Inicializar nivel/entidades
         levelManager = new LevelManager();
         entities = new ArrayList<>();
-        
+
+        // Crear cámara usando el TileMap cargado
         camera = new Camera(GS.getVirtualWidth(), GS.getVirtualHeight(), levelManager.getCurrentTileMap());
-        
+
+        // Agregar enemigos cargados en LevelManager
         for (Entities e : levelManager.getEnemies()) {
             addEntity(e);
+        }
+
+        // Agregar el player si el LevelManager lo creó (tile id 3)
+        Player p = levelManager.getPlayer();
+        if (p != null) {
+            addEntity(p);
         }
     }
 
@@ -65,8 +74,9 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        g2d.setColor(Color.BLACK);
+        
+        Color cielo = new Color(135, 206, 235);
+        g2d.setColor(cielo);
         g2d.fillRect(0, 0, GS.getVirtualWidth(), GS.getVirtualHeight());
 
         if (levelManager.getCurrentTileMap() != null) {
@@ -76,7 +86,7 @@ public class GamePanel extends JPanel {
         for (Entities e : entities) {
             e.draw(g2d, camera);
         }
-        
+
         g.drawImage(canvas, 0, 0, getWidth(), getHeight(), null);
     }
 }

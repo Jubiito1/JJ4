@@ -1,16 +1,11 @@
 package com.mijuego.core;
 
 import javax.swing.JFrame;
-import com.mijuego.entities.Player;
 
 public class GameMain {
     public static void main(String[] args) {
         // Crear el panel
         GamePanel panel = new GamePanel();
-
-        // 🔹 Crear el player y agregarlo al panel
-        Player player = new Player(GS.SC(100), GS.SC(100), GS.SC(20), GS.SC(20), 100, panel.getLevelManager().getCurrentTileMap());
-        panel.addEntity(player);
         
         // Configurar la ventana
         JFrame window = new JFrame("JJ4");
