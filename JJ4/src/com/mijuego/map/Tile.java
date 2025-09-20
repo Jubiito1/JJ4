@@ -1,42 +1,58 @@
 package com.mijuego.map;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.awt.Color;
-import com.mijuego.core.GS;
+import java.awt.Graphics2D;
+import com.mijuego.core.Camera;
 
 public class Tile {
-    // Tamaño base y tamaño escalado
-    public static final int BASE_SIZE = 20;
-    public static final int SIZE = GS.SC(BASE_SIZE);
+    public static final int SIZE = 20;
 
-    private int id;                   // ID del tile (ej: 0=aire, 1=suelo)
-    private boolean solid;            // Si colisiona o no
+    public static final int EMPTY = 0;
+    public static final int SOLID = 1;
+    public static final int GOOMBA = 2;
+    public static final int PLAYER = 3;
+    public static final int KILL = 4;  // 🔹 nuevo tile rojo mortal
 
-    public Tile(int id, BufferedImage sprite, boolean solid) {
-        this.id = id;
-        this.solid = solid;
+    private int type;
+
+    public Tile(int type) {
+        this.type = type;
     }
 
-    // Dibujar el tile en coordenadas (x, y) en el canvas
-    public void draw(Graphics2D g, int x, int y) {
-            g.setColor(Color.BLACK);
-            g.fillRect(x, y, SIZE, SIZE);
+    public int getType() {
+        return type;
     }
 
-    // Devuelve si es sólido
     public boolean isSolid() {
-        return solid;
+        return type == SOLID;
     }
 
-    // Rectángulo para colisiones
-    public Rectangle getBounds(int x, int y) {
-        return new Rectangle(x, y, SIZE, SIZE);
+    public boolean isKill() {
+        return type == KILL;
     }
 
-    // Getters
-    public int getId() {
-        return id;
+    public void draw(Graphics2D g, int x, int y, Camera camera) {
+        if (type == EMPTY) return;
+
+        switch (type) {
+            case SOLID:
+                g.setColor(Color.GRAY);
+                break;
+            case GOOMBA:
+                g.setColor(Color.ORANGE);
+                break;
+            case PLAYER:
+                g.setColor(Color.BLUE);
+                break;
+            case KILL:
+                g.setColor(Color.RED);  // 🔹 tile mortal en rojo
+                break;
+        }
+
+        g.fillRect(
+            x * SIZE - camera.getX(),
+            y * SIZE - camera.getY(),
+            SIZE, SIZE
+        );
     }
 }

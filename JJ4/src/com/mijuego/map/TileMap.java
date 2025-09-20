@@ -18,6 +18,7 @@ public class TileMap {
         this.tileset = tileset;
     }
 
+    // Cargar nivel desde un InputStream (archivo .txt)
     public void loadFromStream(InputStream is) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         List<String> lines = new ArrayList<>();
@@ -42,30 +43,37 @@ public class TileMap {
         }
     }
 
+    // Dibujar tiles en pantalla
     public void draw(Graphics2D g, Camera camera) {
-        int ts = Tile.SIZE;
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 int id = map[r][c];
-                if (id == 0) continue;
+                if (id == Tile.EMPTY || id == Tile.GOOMBA || id == Tile.PLAYER) continue;
 
                 Tile t = tileset[id];
-                int x = c * ts - camera.getX();
-                int y = r * ts - camera.getY();
-                t.draw(g, x, y);
+                t.draw(g, c, r, camera);
             }
         }
     }
 
-    // ✅ Nuevo: preguntar si un tile es sólido
+    // Consultar si un tile es sólido
     public boolean isTileSolid(int row, int col) {
         if (row < 0 || row >= rows || col < 0 || col >= cols) {
-            return true; // fuera del mapa = sólido (pared invisible)
+            return true; // fuera del mapa = sólido
         }
         int id = map[row][col];
         return tileset[id].isSolid();
     }
-    
+
+    // 🔹 Nuevo: devuelve el Tile en esa posición
+    public Tile getTile(int row, int col) {
+        if (row < 0 || row >= rows || col < 0 || col >= cols) {
+            return new Tile(Tile.EMPTY);
+        }
+        int id = map[row][col];
+        return tileset[id];
+    }
+
     public void setTileId(int row, int col, int id) {
         if (row < 0 || row >= rows || col < 0 || col >= cols) return;
         map[row][col] = id;

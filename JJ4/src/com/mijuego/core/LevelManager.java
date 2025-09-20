@@ -7,7 +7,6 @@ import com.mijuego.entities.Entities;
 import com.mijuego.entities.enemies.Goomba;
 import com.mijuego.entities.Player;
 
-import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +27,22 @@ public class LevelManager {
 
     // Inicializa los tiles básicos
     private void initTileset() {
-        tileset = new Tile[2];
+        tileset = new Tile[5]; // ahora soportamos hasta el 4
 
         // 0 = aire
-        tileset[0] = new Tile(0, null, false);
+        tileset[0] = new Tile(Tile.EMPTY);
 
-        // 1 = bloque sólido (temporal, rojo)
-        BufferedImage blockSprite = new BufferedImage(Tile.BASE_SIZE, Tile.BASE_SIZE, BufferedImage.TYPE_INT_RGB);
-        blockSprite.getGraphics().setColor(java.awt.Color.RED);
-        blockSprite.getGraphics().fillRect(0, 0, Tile.BASE_SIZE, Tile.BASE_SIZE);
-        tileset[1] = new Tile(1, blockSprite, true);
+        // 1 = bloque sólido
+        tileset[1] = new Tile(Tile.SOLID);
+
+        // 2 = goomba (no se dibuja como tile, se reemplaza al cargar nivel)
+        tileset[2] = new Tile(Tile.GOOMBA);
+
+        // 3 = player (no se dibuja como tile, se reemplaza al cargar nivel)
+        tileset[3] = new Tile(Tile.PLAYER);
+
+        // 4 = tile mortal
+        tileset[4] = new Tile(Tile.KILL);
     }
 
     // Carga un nivel por número

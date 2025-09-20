@@ -30,8 +30,8 @@ public class Player extends Entities {
 
     @Override
     public void update() {
-    	
-    	if (damageCooldown > 0) damageCooldown--;
+        if (damageCooldown > 0) damageCooldown--;
+
         // 🔹 Movimiento horizontal
         dx = 0;
         if (InputManager.isLeft())  dx = -MOVE_SPEED;
@@ -53,7 +53,7 @@ public class Player extends Entities {
         CollisionManager.checkTileCollisionY(this, map);
         y += dy;
 
-        // 🔹 Actualizar onGround basado en tiles sólidos debajo del jugador
+        // 🔹 Actualizar onGround
         int tileSize = Tile.SIZE;
         int leftCol = (int)x / tileSize;
         int rightCol = (int)(x + width - 1) / tileSize;
@@ -64,6 +64,17 @@ public class Player extends Entities {
             if (map.isTileSolid(bottomRow, col)) {
                 onGround = true;
                 break;
+            }
+        }
+
+        // 🔹 Chequear si el player toca un tile "mortal"
+        int topRow = (int)y / tileSize;
+        for (int row = topRow; row <= bottomRow; row++) {
+            for (int col = leftCol; col <= rightCol; col++) {
+                if (map.getTile(row, col).isKill()) {
+                    this.damage(this.getHealth()); // vida a 0
+                    return;
+                }
             }
         }
     }
