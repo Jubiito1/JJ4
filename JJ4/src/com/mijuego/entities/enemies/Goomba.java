@@ -13,7 +13,7 @@ import com.mijuego.utils.CollisionManager;
 
 public class Goomba extends Enemies {
 
-    private final int DAMAGE_TO_PLAYER = 20;
+    private final int DAMAGE_TO_PLAYER = 100;
     private final int DAMAGE_TAKEN = 100; // cantidad de daño que recibe al ser aplastado
 
     public Goomba(double x, double y, TileMap map) {
