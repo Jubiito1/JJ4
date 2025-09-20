@@ -3,9 +3,10 @@ package com.mijuego.map;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import com.mijuego.core.Camera;
+import com.mijuego.core.GS;
 
 public class Tile {
-    public static final int SIZE = 20;
+    public static final int SIZE = GS.SC(20);
 
     public static final int EMPTY = 0;
     public static final int SOLID = 1;

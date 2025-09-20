@@ -14,6 +14,7 @@ public class Player extends Entities {
 
     private TileMap map;
     private Color color = Color.BLUE;
+    private int coins = 0; // contador de monedas
 
     private int damageCooldown = 0; // frames restantes hasta poder recibir daño otra vez
     private final int DAMAGE_COOLDOWN_FRAMES = 20;
@@ -78,6 +79,15 @@ public class Player extends Entities {
                 }
             }
         }
+    }
+    
+    public void addCoins(int amount) {
+        coins += amount;
+    }
+    
+ // Getter
+    public int getCoins() {
+        return coins;
     }
 
     public void takeDamage(int amount) {

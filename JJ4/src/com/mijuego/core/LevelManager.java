@@ -6,6 +6,7 @@ import com.mijuego.utils.ResourceManager;
 import com.mijuego.entities.Entities;
 import com.mijuego.entities.enemies.Goomba;
 import com.mijuego.entities.Player;
+import com.mijuego.entities.items.Coin;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -16,50 +17,57 @@ public class LevelManager {
     private int currentLevel = 1;
     private TileMap currentTileMap;
     private Tile[] tileset;
-    private List<Entities> enemies; // Lista de enemigos del nivel
+    private List<Entities> enemies;
+    private List<Entities> items; // nueva lista de items
     private Player player;
 
     public LevelManager() {
         enemies = new ArrayList<>();
-        initTileset();            // Inicializa los tipos de tiles
-        loadLevel(currentLevel);  // Carga el primer nivel
+        items = new ArrayList<>();
+        initTileset();
+        loadLevel(currentLevel);
     }
 
-    // Inicializa los tiles básicos
     private void initTileset() {
-        tileset = new Tile[6]; // ahora soportamos hasta el 5
+        tileset = new Tile[7]; // ahora soportamos hasta 6
 
-        tileset[0] = new Tile(Tile.EMPTY);   // aire
-        tileset[1] = new Tile(Tile.SOLID);   // bloque sólido
-        tileset[2] = new Tile(Tile.GOOMBA);  // goomba (se reemplaza al cargar nivel)
-        tileset[3] = new Tile(Tile.PLAYER);  // player (se reemplaza al cargar nivel)
-        tileset[4] = new Tile(Tile.KILL);    // tile mortal
-        tileset[5] = new Tile(Tile.WIN);     // tile win amarilla
+        tileset[0] = new Tile(Tile.EMPTY);
+        tileset[1] = new Tile(Tile.SOLID);
+        tileset[2] = new Tile(Tile.GOOMBA);
+        tileset[3] = new Tile(Tile.PLAYER);
+        tileset[4] = new Tile(Tile.KILL);
+        tileset[5] = new Tile(Tile.WIN); // futuro uso, si se quiere
+        tileset[6] = new Tile(Tile.EMPTY); // para la moneda (no se dibuja como tile)
     }
 
-    // Carga un nivel por número
     public void loadLevel(int levelNumber) {
         try {
-            enemies.clear(); // Limpiar enemigos del nivel anterior
-            player = null;   // Resetear el player
+            enemies.clear();
+            items.clear();
+            player = null;
 
             String path = "/assets/levels/level" + levelNumber + ".txt";
             InputStream is = ResourceManager.loadText(path);
             currentTileMap = new TileMap(tileset);
             currentTileMap.loadFromStream(is);
 
-            // --- Crear entidades según el mapa ---
             for (int r = 0; r < currentTileMap.getRows(); r++) {
                 for (int c = 0; c < currentTileMap.getCols(); c++) {
                     int tileId = currentTileMap.getTileId(r, c);
 
-                    if (tileId == 2) { // Goomba
+                    if (tileId == 2) {
                         Goomba g = new Goomba(c * Tile.SIZE, r * Tile.SIZE, currentTileMap);
                         enemies.add(g);
-                        currentTileMap.setTileId(r, c, 0); // reemplazar por aire
-                    } else if (tileId == 3) { // Player
+                        currentTileMap.setTileId(r, c, 0);
+                    } 
+                    else if (tileId == 3) {
                         player = new Player(c * Tile.SIZE, r * Tile.SIZE, GS.SC(20), GS.SC(20), 100, currentTileMap);
-                        currentTileMap.setTileId(r, c, 0); // reemplazar por aire
+                        currentTileMap.setTileId(r, c, 0);
+                    }
+                    else if (tileId == 6) {
+                        Coin coin = new Coin(c * Tile.SIZE, r * Tile.SIZE, Tile.SIZE);
+                        items.add(coin);
+                        currentTileMap.setTileId(r, c, 0);
                     }
                 }
             }
@@ -70,34 +78,45 @@ public class LevelManager {
         }
     }
 
-    // Avanzar al siguiente nivel
     public void nextLevel() {
         loadLevel(currentLevel + 1);
     }
 
-    // 🔹 Comprueba si el player toca la tile WIN
-    public boolean checkWin(Player player) {
-        if (player == null || currentTileMap == null) return false;
+    public TileMap getCurrentTileMap() {
+        return currentTileMap;
+    }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public List<Entities> getEnemies() {
+        return enemies;
+    }
+
+    public List<Entities> getItems() {
+        return items;
+    }
+
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    // comprobación de tile win (amarillo)
+    public boolean checkWin(Player player) {
         int tileSize = Tile.SIZE;
-        int leftCol   = (int)player.getX() / tileSize;
-        int rightCol  = (int)(player.getX() + player.getWidth() - 1) / tileSize;
-        int topRow    = (int)player.getY() / tileSize;
+        int leftCol = (int)player.getX() / tileSize;
+        int rightCol = (int)(player.getX() + player.getWidth() - 1) / tileSize;
+        int topRow = (int)player.getY() / tileSize;
         int bottomRow = (int)(player.getY() + player.getHeight() - 1) / tileSize;
 
-        for (int row = topRow; row <= bottomRow; row++) {
-            for (int col = leftCol; col <= rightCol; col++) {
-                if (currentTileMap.getTile(row, col).isWin()) {
+        for (int r = topRow; r <= bottomRow; r++) {
+            for (int c = leftCol; c <= rightCol; c++) {
+                if (currentTileMap.getTile(r, c).getType() == Tile.WIN) {
                     return true;
                 }
             }
         }
         return false;
     }
-
-    // Getters
-    public TileMap getCurrentTileMap() { return currentTileMap; }
-    public Player getPlayer() { return player; }
-    public List<Entities> getEnemies() { return enemies; }
-    public int getCurrentLevel() { return currentLevel; }
 }

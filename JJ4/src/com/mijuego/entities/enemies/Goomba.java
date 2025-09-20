@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import com.mijuego.core.Camera;
+import com.mijuego.core.GS;
 import com.mijuego.entities.Player;
 import com.mijuego.map.Tile;
 import com.mijuego.map.TileMap;
@@ -16,8 +17,8 @@ public class Goomba extends Enemies {
     private final int DAMAGE_TAKEN = 100; // cantidad de daño que recibe al ser aplastado
 
     public Goomba(double x, double y, TileMap map) {
-        super(x, y, 20, 20, 100, map); // tamaño y vida ejemplo
-        this.speed = 1.5;
+        super(x, y, GS.SC(20), GS.SC(20), 100, map); // tamaño y vida ejemplo
+        this.speed = GS.DSC(1.5);
         this.facingRight = true;
     }
 
@@ -51,7 +52,7 @@ public class Goomba extends Enemies {
         x += dx;
 
         // --- Gravedad simple ---
-        dy += 0.2; // gravedad
+        dy += GS.DSC(0.2); // gravedad
         CollisionManager.checkTileCollisionY(this, map);
         y += dy;
     }
@@ -74,9 +75,9 @@ public class Goomba extends Enemies {
 
         // --- Jugador cayendo sobre el enemigo (aplasta) ---
         if (player.getDy() > 0 && playerBounds.intersects(enemyBounds)) {
-            if (player.getY() + player.getHeight() - 5 < y + height / 2) {
+            if (player.getY() + player.getHeight() - GS.SC(5) < y + height / GS.DSC(2)) {
                 this.damage(DAMAGE_TAKEN);
-                player.setDy(-5); // rebote vertical
+                player.setDy(GS.DSC(-5)); // rebote vertical
                 if (!isAlive()) deactivate();
                 return;
             }

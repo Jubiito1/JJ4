@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.mijuego.entities.Entities;
-import com.mijuego.entities.Player; // <- IMPORT NECESARIO
+import com.mijuego.entities.Player;
 
 public class GamePanel extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -25,6 +25,23 @@ public class GamePanel extends JPanel {
         setBackground(Color.BLACK);
         setDoubleBuffered(true);
 
+        // Inicializar nivel/entidades
+        levelManager = new LevelManager();
+        entities = new ArrayList<>();
+
+        // Crear cámara usando el TileMap cargado
+        camera = new Camera(GS.getVirtualWidth(), GS.getVirtualHeight(), levelManager.getCurrentTileMap());
+
+        // Agregar enemigos
+        entities.addAll(levelManager.getEnemies());
+
+        // Agregar items
+        entities.addAll(levelManager.getItems());
+
+        // Agregar player
+        Player p = levelManager.getPlayer();
+        if (p != null) entities.add(p);
+
         canvas = new BufferedImage(
             GS.getVirtualWidth(),
             GS.getVirtualHeight(),
@@ -35,24 +52,6 @@ public class GamePanel extends JPanel {
         setFocusable(true);
         requestFocus();
         addKeyListener(new com.mijuego.utils.InputManager());
-
-        // Inicializar nivel/entidades
-        levelManager = new LevelManager();
-        entities = new ArrayList<>();
-
-        // Crear cámara usando el TileMap cargado
-        camera = new Camera(GS.getVirtualWidth(), GS.getVirtualHeight(), levelManager.getCurrentTileMap());
-
-        // Agregar enemigos cargados en LevelManager
-        for (Entities e : levelManager.getEnemies()) {
-            addEntity(e);
-        }
-
-        // Agregar el player si el LevelManager lo creó (tile id 3)
-        Player p = levelManager.getPlayer();
-        if (p != null) {
-            addEntity(p);
-        }
     }
 
     public void addEntity(Entities e) {
@@ -66,7 +65,7 @@ public class GamePanel extends JPanel {
     public LevelManager getLevelManager() {
         return levelManager;
     }
-    
+
     public Camera getCamera() {
         return camera;
     }
@@ -83,6 +82,7 @@ public class GamePanel extends JPanel {
             levelManager.getCurrentTileMap().draw(g2d, camera);
         }
 
+        // Dibujar todas las entidades, incluyendo items
         for (Entities e : entities) {
             e.draw(g2d, camera);
         }
