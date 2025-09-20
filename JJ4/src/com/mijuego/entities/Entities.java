@@ -10,6 +10,7 @@ public abstract class Entities {
     protected int width, height;     // tamaño
     protected double dx, dy;         // velocidad en x e y
     protected int health;  // estado vivo o muerto
+    protected boolean onGround = false;
 
     public Entities(double x, double y, int width, int height, int health) {
         this.x = x;
@@ -28,6 +29,14 @@ public abstract class Entities {
     // 🔹 Rectángulo para colisiones
     public Rectangle getBounds() {
         return new Rectangle((int)x, (int)y, width, height);
+    }
+    
+    public boolean isOnGround() {
+        return onGround;
+    }
+    
+    public void setOnGround(boolean onGround) {
+        this.onGround = onGround;
     }
     
     public void damage(int amount) {

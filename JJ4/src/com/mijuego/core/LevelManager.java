@@ -7,6 +7,7 @@ import com.mijuego.entities.Entities;
 import com.mijuego.entities.enemies.Goomba;
 import com.mijuego.entities.Player;
 import com.mijuego.entities.items.Coin;
+import com.mijuego.entities.enemies.Jumper;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class LevelManager {
         tileset[3] = new Tile(Tile.PLAYER);
         tileset[4] = new Tile(Tile.KILL);
         tileset[5] = new Tile(Tile.WIN); // futuro uso, si se quiere
-        tileset[6] = new Tile(Tile.EMPTY); // para la moneda (no se dibuja como tile)
+        tileset[6] = new Tile(Tile.COIN); // para la moneda (no se dibuja como tile)
     }
 
     public void loadLevel(int levelNumber) {
@@ -69,6 +70,11 @@ public class LevelManager {
                         items.add(coin);
                         currentTileMap.setTileId(r, c, 0);
                     }
+                    if (tileId == 7) {
+                        Jumper j = new Jumper(c * Tile.SIZE, r * Tile.SIZE, currentTileMap, player);
+                        enemies.add(j);
+                        currentTileMap.setTileId(r, c, 0);
+                    } 
                 }
             }
 

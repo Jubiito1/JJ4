@@ -5,6 +5,7 @@ import com.mijuego.entities.Player;
 import com.mijuego.entities.enemies.Goomba;
 import com.mijuego.utils.InputManager;
 import com.mijuego.entities.items.Item;
+import com.mijuego.entities.enemies.Jumper;
 
 public class GameLoop implements Runnable {
 
@@ -102,6 +103,7 @@ public class GameLoop implements Runnable {
                 if (player != null) {
                     for (Entities e : panel.getEntities()) {
                         if (e instanceof Goomba) ((Goomba)e).checkPlayerCollision(player);
+                        if (e instanceof Jumper) ((Jumper)e).checkPlayerCollision(player);
                     }
                 }
 
