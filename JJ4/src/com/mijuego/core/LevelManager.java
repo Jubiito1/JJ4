@@ -30,7 +30,7 @@ public class LevelManager {
     }
 
     private void initTileset() {
-        tileset = new Tile[8]; // ahora soportamos hasta 6
+        tileset = new Tile[7]; // ahora soportamos hasta 6
 
         tileset[0] = new Tile(Tile.EMPTY);
         tileset[1] = new Tile(Tile.SOLID);
@@ -39,7 +39,6 @@ public class LevelManager {
         tileset[4] = new Tile(Tile.KILL);
         tileset[5] = new Tile(Tile.WIN); // futuro uso, si se quiere
         tileset[6] = new Tile(Tile.COIN); // para la moneda (no se dibuja como tile)
-        tileset[7] = new Tile(Tile.JUMPER); // para la moneda (no se dibuja como tile)
     }
 
     public void loadLevel(int levelNumber) {

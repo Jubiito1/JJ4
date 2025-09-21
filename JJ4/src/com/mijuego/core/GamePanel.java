@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import com.mijuego.entities.Entities;
 import com.mijuego.entities.Player;
+import com.mijuego.ui.HUD;
 
 public class GamePanel extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -20,6 +21,7 @@ public class GamePanel extends JPanel {
     private Camera camera;
 
     private List<Entities> entities;
+    private HUD hud;
 
     public GamePanel() {
         setBackground(Color.BLACK);
@@ -41,6 +43,8 @@ public class GamePanel extends JPanel {
         // Agregar player
         Player p = levelManager.getPlayer();
         if (p != null) entities.add(p);
+        // Crear HUD
+        hud = new HUD(p, levelManager);
 
         canvas = new BufferedImage(
             GS.getVirtualWidth(),
@@ -86,7 +90,10 @@ public class GamePanel extends JPanel {
         for (Entities e : entities) {
             e.draw(g2d, camera);
         }
-
+        // Dibujar HUD
+        if (hud != null) {
+            hud.draw(g2d);
+        }
         g.drawImage(canvas, 0, 0, getWidth(), getHeight(), null);
     }
 }

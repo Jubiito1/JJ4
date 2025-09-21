@@ -26,13 +26,19 @@ public class Player extends Entities {
     private final double MOVE_SPEED = GS.DSC(3);
 
     public Player(double x, double y, int width, int height, int health, TileMap map) {
-        super(x, y, width, height, health);
+        super(x, y, width, height, 3); // health inicial en 3
         this.map = map;
     }
 
     @Override
     public void update() {
         if (damageCooldown > 0) damageCooldown--;
+
+        // Si el jugador ya no tiene vida, no actualizar más
+        if (!isAlive()) {
+            // Opcional: podrías agregar efectos de muerte aquí
+            return;
+        }
 
         // 🔹 Movimiento horizontal
         dx = 0;
@@ -81,29 +87,37 @@ public class Player extends Entities {
         }
     }
     
-    public void addCoins(int amount) {
-        coins += amount;
-    }
-    
- // Getter
+    // Getter
     public int getCoins() {
         return coins;
     }
 
+    public void addCoins(int amount) {
+        coins += amount;
+    }
+
     public void takeDamage(int amount) {
         if (damageCooldown == 0) {
-            damage(amount);
+            damage(1); // Solo baja 1 de health por daño de enemigo
             damageCooldown = DAMAGE_COOLDOWN_FRAMES;
         }
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 
     @Override
     public void draw(Graphics2D g, Camera camera) {
         if (!isAlive()) {
-            g.setColor(Color.RED);
-        } else {
-            g.setColor(color);
+            // No dibujar nada si está muerto
+            return;
         }
+        g.setColor(color);
         g.fillRect(
             (int)(x - camera.getX()),
             (int)(y - camera.getY()),

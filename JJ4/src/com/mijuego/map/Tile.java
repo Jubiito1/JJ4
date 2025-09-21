@@ -15,7 +15,6 @@ public class Tile {
     public static final int KILL = 4;  // 🔹 nuevo tile rojo mortal
     public static final int WIN = 5; // nuevo tile amarillo
     public static final int COIN = 6;
-    public static final int JUMPER = 7;
 
     private int type;
 
@@ -49,7 +48,6 @@ public class Tile {
             case KILL: g.setColor(Color.RED); break;
             case WIN: g.setColor(Color.YELLOW); break; // amarillo
             case COIN: g.setColor(Color.YELLOW); break;
-            case JUMPER: g.setColor(Color.MAGENTA); break;
         }
         g.fillRect(
                 x * SIZE - camera.getX(),

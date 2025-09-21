@@ -78,7 +78,10 @@ public class Goomba extends Enemies {
             if (player.getY() + player.getHeight() - GS.SC(5) < y + height / GS.DSC(2)) {
                 this.damage(DAMAGE_TAKEN);
                 player.setDy(GS.DSC(-5)); // rebote vertical
-                if (!isAlive()) deactivate();
+                if (!isAlive()) {
+                    deactivate();
+                    player.addCoins(2); // suma 200 puntos al matar enemigo
+                }
                 return;
             }
         }
