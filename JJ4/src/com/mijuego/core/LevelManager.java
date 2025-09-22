@@ -8,6 +8,7 @@ import com.mijuego.entities.enemies.Goomba;
 import com.mijuego.entities.Player;
 import com.mijuego.entities.items.Coin;
 import com.mijuego.entities.enemies.Jumper;
+import com.mijuego.entities.items.Trampoline;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class LevelManager {
     }
 
     private void initTileset() {
-        tileset = new Tile[7]; // ahora soportamos hasta 6
+        tileset = new Tile[9];
 
         tileset[0] = new Tile(Tile.EMPTY);
         tileset[1] = new Tile(Tile.SOLID);
@@ -38,7 +39,9 @@ public class LevelManager {
         tileset[3] = new Tile(Tile.PLAYER);
         tileset[4] = new Tile(Tile.KILL);
         tileset[5] = new Tile(Tile.WIN); // futuro uso, si se quiere
-        tileset[6] = new Tile(Tile.COIN); // para la moneda (no se dibuja como tile)
+        tileset[6] = new Tile(Tile.COIN);
+        tileset[7] = new Tile(Tile.JUMPER);
+        tileset[8] = new Tile(Tile.TRAMPOLINE);
     }
 
     public void loadLevel(int levelNumber) {
@@ -75,6 +78,11 @@ public class LevelManager {
                         enemies.add(j);
                         currentTileMap.setTileId(r, c, 0);
                     } 
+                    else if (tileId == 8) { // TRAMPOLINE
+                        Trampoline tramp = new Trampoline(c * Tile.SIZE, r * Tile.SIZE, Tile.SIZE);
+                        items.add(tramp);
+                        currentTileMap.setTileId(r, c, 0); // lo borramos del mapa para que no se dibuje como tile
+                    }
                 }
             }
 

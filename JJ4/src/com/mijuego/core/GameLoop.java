@@ -106,6 +106,11 @@ public class GameLoop implements Runnable {
                         if (e instanceof Jumper) ((Jumper)e).checkPlayerCollision(player);
                     }
                 }
+                
+                
+             // Eliminar items recolectados
+                panel.getEntities().removeIf(e -> (e instanceof Item) && ((Item)e).isCollected());
+
 
                 // Actualizar cámara
                 if (player != null) panel.getCamera().follow(player);

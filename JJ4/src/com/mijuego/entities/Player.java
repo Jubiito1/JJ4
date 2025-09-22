@@ -87,6 +87,12 @@ public class Player extends Entities {
         }
     }
     
+    // setter de la velocidad vertical (para power-ups que modifiquen dy)
+    public void setVelY(double velY) {
+        this.dy = velY;
+        this.onGround = false; // fuerza que deje de estar en el suelo
+    }
+
     // Getter
     public int getCoins() {
         return coins;

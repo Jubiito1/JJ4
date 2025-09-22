@@ -51,6 +51,7 @@ public class Tile {
             case WIN: g.setColor(Color.YELLOW); break; // amarillo
             case COIN: g.setColor(Color.YELLOW); break;
             case JUMPER: g.setColor(Color.MAGENTA); break; 
+            case TRAMPOLINE: g.setColor(Color.CYAN); break;
         }
         g.fillRect(
                 x * SIZE - camera.getX(),
