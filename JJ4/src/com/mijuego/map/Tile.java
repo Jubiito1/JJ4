@@ -17,6 +17,8 @@ public class Tile {
     public static final int COIN = 6;
     public static final int JUMPER = 7;
     public static final int TRAMPOLINE = 8;
+    public static final int SHOOTER = 9;
+
 
     private int type;
 
@@ -52,6 +54,7 @@ public class Tile {
             case COIN: g.setColor(Color.YELLOW); break;
             case JUMPER: g.setColor(Color.MAGENTA); break; 
             case TRAMPOLINE: g.setColor(Color.CYAN); break;
+            case SHOOTER: g.setColor(Color.ORANGE); break;
         }
         g.fillRect(
                 x * SIZE - camera.getX(),

@@ -9,6 +9,7 @@ import com.mijuego.entities.Player;
 import com.mijuego.entities.items.Coin;
 import com.mijuego.entities.enemies.Jumper;
 import com.mijuego.entities.items.Trampoline;
+import com.mijuego.entities.enemies.Shooter;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class LevelManager {
     }
 
     private void initTileset() {
-        tileset = new Tile[9];
+        tileset = new Tile[10];
 
         tileset[0] = new Tile(Tile.EMPTY);
         tileset[1] = new Tile(Tile.SOLID);
@@ -42,6 +43,7 @@ public class LevelManager {
         tileset[6] = new Tile(Tile.COIN);
         tileset[7] = new Tile(Tile.JUMPER);
         tileset[8] = new Tile(Tile.TRAMPOLINE);
+        tileset[9] = new Tile(Tile.SHOOTER);
     }
 
     public void loadLevel(int levelNumber) {
@@ -65,7 +67,7 @@ public class LevelManager {
                         currentTileMap.setTileId(r, c, 0);
                     } 
                     else if (tileId == 3) {
-                        player = new Player(c * Tile.SIZE, r * Tile.SIZE, GS.SC(20), GS.SC(20), 3, currentTileMap);
+                        player = new Player(c * Tile.SIZE, r * Tile.SIZE, GS.SC(20), GS.SC(20), 100, currentTileMap);
                         currentTileMap.setTileId(r, c, 0);
                     }
                     else if (tileId == 6) {
@@ -88,6 +90,11 @@ public class LevelManager {
 
                         Trampoline tramp = new Trampoline(trampX, trampY, trampWidth, trampHeight);
                         items.add(tramp);
+                        currentTileMap.setTileId(r, c, 0); // lo borramos del mapa
+                    }
+                    else if (tileId == 9) { // Shooter
+                        Shooter shooter = new Shooter(c * Tile.SIZE, r * Tile.SIZE, currentTileMap, player);
+                        enemies.add(shooter);
                         currentTileMap.setTileId(r, c, 0); // lo borramos del mapa
                     }
                 }

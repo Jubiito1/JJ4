@@ -9,7 +9,7 @@ import com.mijuego.core.GS;
 
 public class Trampoline extends Item {
     
-    private int bouncePower = GS.SC(-10); // fuerza del impulso hacia arriba
+    private int bouncePower = GS.SC(-8); // fuerza del impulso hacia arriba
     
     public Trampoline(double x, double y,int width, int height) {
         super(x, y,width, height); 

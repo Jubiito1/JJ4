@@ -26,7 +26,7 @@ public class Player extends Entities {
     private final double MOVE_SPEED = GS.DSC(3);
 
     public Player(double x, double y, int width, int height, int health, TileMap map) {
-        super(x, y, width, height, health); // health inicial en 3
+        super(x, y, width, height, 3); // health inicial en 3
         this.map = map;
     }
 
