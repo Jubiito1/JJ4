@@ -1,5 +1,7 @@
 package com.mijuego.entities.enemies;
 
+import com.mijuego.utils.AudioManager;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -13,7 +15,7 @@ import com.mijuego.utils.CollisionManager;
 
 public class Goomba extends Enemies {
 
-    private final int DAMAGE_TO_PLAYER = 1;
+    private final int DAMAGE_TO_PLAYER = 100;
     private final int DAMAGE_TAKEN = 100; // cantidad de daño que recibe al ser aplastado
 
     public Goomba(double x, double y, TileMap map) {
@@ -80,6 +82,7 @@ public class Goomba extends Enemies {
                 player.setDy(GS.DSC(-5)); // rebote vertical
                 if (!isAlive()) {
                     deactivate();
+                    AudioManager.playGoombaStomp();
                     player.addCoins(2); // suma 200 puntos al matar enemigo
                 }
                 return;
