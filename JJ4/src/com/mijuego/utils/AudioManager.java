@@ -1,12 +1,6 @@
 package com.mijuego.utils;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.File;
-import java.io.IOException;
 
 public class AudioManager {
     private static Clip music;
@@ -18,16 +12,16 @@ public class AudioManager {
     private static Clip springjump;
     private static Clip victory;
 
-    // Inicializa todos los sonidos
+    // Inicializa todos los sonidos usando ResourceManager para portabilidad
     public static void init() {
-        music = loadClip("assets/sounds/music.wav");
-        coin = loadClip("assets/sounds/coin.wav");
-        goombastomp = loadClip("assets/sounds/goombastomp.wav");
-        hurt = loadClip("assets/sounds/hurt.wav");
-        jump = loadClip("assets/sounds/jump.wav");
-        lose = loadClip("assets/sounds/lose.wav");
-        springjump = loadClip("assets/sounds/springjump.wav");
-        victory = loadClip("assets/sounds/victory.wav");
+        music = loadClip("/assets/sounds/music.wav");
+        coin = loadClip("/assets/sounds/coin.wav");
+        goombastomp = loadClip("/assets/sounds/goombastomp.wav");
+        hurt = loadClip("/assets/sounds/hurt.wav");
+        jump = loadClip("/assets/sounds/jump.wav");
+        lose = loadClip("/assets/sounds/lose.wav");
+        springjump = loadClip("/assets/sounds/springjump.wav");
+        victory = loadClip("/assets/sounds/victory.wav");
 
         // Música de fondo en loop
         if (music != null) {
@@ -35,18 +29,9 @@ public class AudioManager {
         }
     }
 
-    // Método interno para cargar clips
+    // Ahora usamos ResourceManager para cargar sonidos
     private static Clip loadClip(String path) {
-        try {
-            File file = new File(path);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            return clip;
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return ResourceManager.loadSound(path);
     }
 
     // Métodos para reproducir cada sonido
