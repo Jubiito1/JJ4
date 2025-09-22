@@ -13,13 +13,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class HUD {
-    private Player player;
     private LevelManager levelManager;
     private Image healthIcon;
     private Font hudFont;
 
-    public HUD(Player player, LevelManager levelManager) {
-        this.player = player;
+    public HUD(LevelManager levelManager) {
         this.levelManager = levelManager;
         try {
             healthIcon = ImageIO.read(getClass().getResource("/assets/sprites/1Vida.png"));
@@ -34,18 +32,26 @@ public class HUD {
     public void draw(Graphics2D g) {
         g.setColor(Color.WHITE);
         g.setFont(hudFont);
-        int health = player.getHealth();
-        int ancho = GS.SC(32); // Escalado usando GS
+
+        // ahora el HUD siempre pide el player actual al LevelManager
+        Player player = levelManager.getPlayer();  
+
+        if (player == null) return; // por seguridad
+
+        int ancho = GS.SC(32);
         int alto = GS.SC(32);
         int x = GS.SC(10);
         int y = GS.SC(4);
+        int health = player.getHealth();
+        
         if (health > 0 && healthIcon != null) {
-            for (int i = 0; i < health; i++) {
+            for (int i = 0 ; i < health; i++) {
                 g.drawImage(healthIcon, x + i * (ancho + 8), y, ancho, alto, null);
             }
         } else {
             g.drawString("MORISTE :(", x, GS.SC(20));
         }
+        
         g.drawString("PUNTOS: " + player.getCoins() * 100 , GS.SC(10), GS.SC(50));
         g.drawString("NIVEL: " + levelManager.getCurrentLevel(), GS.SC(10), GS.SC(70));
     }

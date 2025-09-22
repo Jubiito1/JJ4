@@ -47,7 +47,7 @@ public class GamePanel extends JPanel {
         Player p = levelManager.getPlayer();
         if (p != null) entities.add(p);
         // Crear HUD
-        hud = new HUD(p, levelManager);
+        hud = new HUD(levelManager);
 
         canvas = new BufferedImage(
             GS.getVirtualWidth(),
