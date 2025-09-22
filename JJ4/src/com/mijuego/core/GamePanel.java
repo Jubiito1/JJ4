@@ -28,7 +28,7 @@ public class GamePanel extends JPanel {
     public GamePanel() {
         setBackground(Color.BLACK);
         setDoubleBuffered(true);
-        background = ResourceManager.loadImage("/assets/sprites/lanzarocas.png");
+        background = ResourceManager.loadImage("/assets/sprites/cielo.png");
 
         // Inicializar nivel/entidades
         levelManager = new LevelManager();
