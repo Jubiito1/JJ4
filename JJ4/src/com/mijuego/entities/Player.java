@@ -2,7 +2,7 @@ package com.mijuego.entities;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-
+import com.mijuego.utils.AudioManager;
 import com.mijuego.map.TileMap;
 import com.mijuego.map.Tile;
 import com.mijuego.utils.CollisionManager;
@@ -51,6 +51,7 @@ public class Player extends Entities {
         if (InputManager.isUp() && onGround) {
             dy = JUMP_SPEED;
             onGround = false;
+            AudioManager.playJump();
         }
 
         // 🔹 Gravedad
@@ -82,7 +83,8 @@ public class Player extends Entities {
         for (int row = topRow; row <= bottomRow; row++) {
             for (int col = leftCol; col <= rightCol; col++) {
                 if (map.getTile(row, col).isKill()) {
-                    this.damage(this.getHealth()); // vida a 0
+                    this.damage(this.getHealth());
+                    AudioManager.playLose();// vida a 0
                     return;
                 }
             }
@@ -92,7 +94,8 @@ public class Player extends Entities {
     // setter de la velocidad vertical (para power-ups que modifiquen dy)
     public void setVelY(double velY) {
         this.dy = velY;
-        this.onGround = false; // fuerza que deje de estar en el suelo
+        this.onGround = false;// fuerza que deje de estar en el suelo
+        AudioManager.playSpringJump();
     }
 
     // Getter
@@ -102,12 +105,19 @@ public class Player extends Entities {
 
     public void addCoins(int amount) {
         coins += amount;
+        AudioManager.playCoin();
     }
 
     public void takeDamage(int amount) {
         if (damageCooldown == 0) {
-            damage(1); // Solo baja 1 de health por daño de enemigo
+            damage(1);
+            AudioManager.playHurt();// Solo baja 1 de health por daño de enemigo
             damageCooldown = DAMAGE_COOLDOWN_FRAMES;
+            
+            if (!isAlive()) {
+                AudioManager.playLose();      // sonido perder
+                AudioManager.stopMusic();     // cortar música de fondo
+            }
         }
     }
 
