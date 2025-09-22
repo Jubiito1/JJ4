@@ -97,7 +97,7 @@ public class Jumper extends Enemies {
     public void draw(Graphics2D g, Camera camera) {
         if (!active) return;
 
-        g.setColor(Color.MAGENTA); // color marrón
+        g.setColor(Color.MAGENTA); // color 
         g.fillRect((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
     }
 

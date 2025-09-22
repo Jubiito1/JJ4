@@ -18,27 +18,26 @@ public class TileMap {
         this.tileset = tileset;
     }
 
-    // Cargar nivel desde un InputStream (archivo .txt)
+ // Cargar nivel desde un InputStream (archivo .txt)
     public void loadFromStream(InputStream is) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         List<String> lines = new ArrayList<>();
         String line;
         while ((line = br.readLine()) != null) {
             if (!line.trim().isEmpty()) {
-                lines.add(line);
+                lines.add(line.trim());
             }
         }
         br.close();
 
         rows = lines.size();
-        cols = lines.get(0).length();
+        cols = lines.get(0).trim().split("\\s+").length; // cantidad de columnas según espacios
         map = new int[rows][cols];
 
         for (int r = 0; r < rows; r++) {
-            String ln = lines.get(r);
+            String[] tokens = lines.get(r).trim().split("\\s+"); // divide por espacio
             for (int c = 0; c < cols; c++) {
-                char ch = ln.charAt(c);
-                map[r][c] = Character.getNumericValue(ch);
+                map[r][c] = Integer.parseInt(tokens[c]); // convierte "10" en 10, "11" en 11...
             }
         }
     }
