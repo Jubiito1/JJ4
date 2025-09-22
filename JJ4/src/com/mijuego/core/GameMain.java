@@ -1,6 +1,8 @@
 package com.mijuego.core;
 
 import javax.swing.JFrame;
+import com.mijuego.utils.AudioManager;
+
 
 public class GameMain {
     public static void main(String[] args) {
@@ -16,9 +18,12 @@ public class GameMain {
         window.add(panel);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+        AudioManager.init();
 
+        
         // Iniciar loop
         GameLoop loop = new GameLoop(panel);
-        loop.start();
+        loop.start();       
+
     }
 }
