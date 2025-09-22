@@ -15,20 +15,18 @@ import java.io.InputStream;
 public class HUD {
     private Player player;
     private LevelManager levelManager;
-    private int healthHUD;
     private Image healthIcon;
     private Font hudFont;
 
     public HUD(Player player, LevelManager levelManager) {
         this.player = player;
         this.levelManager = levelManager;
-        this.healthHUD = player.getHealth();
         try {
             healthIcon = ImageIO.read(getClass().getResource("/assets/sprites/1Vida.png"));
             InputStream is = getClass().getResourceAsStream("/assets/fonts/Pixeled.ttf");
-            hudFont = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.BOLD, 24f);
+            hudFont = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.BOLD, GS.SC(10));
         } catch (IOException | FontFormatException e) {
-            hudFont = new Font("Arial", Font.BOLD, 24);
+            hudFont = new Font("Arial", Font.BOLD, GS.SC(10));
             e.printStackTrace();
         }
     }
@@ -39,24 +37,16 @@ public class HUD {
         int health = player.getHealth();
         int ancho = GS.SC(32); // Escalado usando GS
         int alto = GS.SC(32);
-        int x = 30;
-        int y = 10;
+        int x = GS.SC(10);
+        int y = GS.SC(4);
         if (health > 0 && healthIcon != null) {
             for (int i = 0; i < health; i++) {
                 g.drawImage(healthIcon, x + i * (ancho + 8), y, ancho, alto, null);
             }
         } else {
-            g.drawString("HEALTH: " + health, x, 40);
+            g.drawString("MORISTE :(", x, GS.SC(20));
         }
-        g.drawString("PUNTOS: " + player.getCoins() * 100 , 30, 140);
-        g.drawString("NIVEL: " + levelManager.getCurrentLevel(), 30, 200);
-    }
-
-    public void setHealthHUD(int health) {
-        this.healthHUD = health;
-    }
-
-    public int getHealthHUD() {
-        return healthHUD;
+        g.drawString("PUNTOS: " + player.getCoins() * 100 , GS.SC(10), GS.SC(50));
+        g.drawString("NIVEL: " + levelManager.getCurrentLevel(), GS.SC(10), GS.SC(70));
     }
 }

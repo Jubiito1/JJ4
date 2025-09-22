@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import com.mijuego.entities.Entities;
 import com.mijuego.entities.Player;
 import com.mijuego.ui.HUD;
+import com.mijuego.utils.ResourceManager;
 
 public class GamePanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
+    private BufferedImage background;
     private BufferedImage canvas;
     private Graphics2D g2d;
     private LevelManager levelManager;
@@ -26,6 +28,7 @@ public class GamePanel extends JPanel {
     public GamePanel() {
         setBackground(Color.BLACK);
         setDoubleBuffered(true);
+        background = ResourceManager.loadImage("/assets/sprites/lanzarocas.png");
 
         // Inicializar nivel/entidades
         levelManager = new LevelManager();
@@ -77,23 +80,41 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
-        Color cielo = new Color(135, 206, 235);
-        g2d.setColor(cielo);
-        g2d.fillRect(0, 0, GS.getVirtualWidth(), GS.getVirtualHeight());
 
+        // --- Dibujar fondo (parallax) ---
+        if (background != null) {
+            double parallaxFactor = 0.5; // cuánto se mueve en relación a la cámara
+            int bgX = (int)(-camera.getX() * parallaxFactor);
+            int bgY = (int)(-camera.getY() * parallaxFactor);
+
+            // Dibujar el fondo cubriendo toda la pantalla
+            for (int x = bgX; x < GS.getVirtualWidth(); x += background.getWidth()) {
+                for (int y = bgY; y < GS.getVirtualHeight(); y += background.getHeight()) {
+                    g2d.drawImage(background, x, y, null);
+                }
+            }
+        } else {
+            // fallback: cielo celeste
+            Color cielo = new Color(135, 206, 235);
+            g2d.setColor(cielo);
+            g2d.fillRect(0, 0, GS.getVirtualWidth(), GS.getVirtualHeight());
+        }
+
+        // --- Dibujar mapa ---
         if (levelManager.getCurrentTileMap() != null) {
             levelManager.getCurrentTileMap().draw(g2d, camera);
         }
 
-        // Dibujar todas las entidades, incluyendo items
+        // --- Dibujar entidades ---
         for (Entities e : entities) {
             e.draw(g2d, camera);
         }
-        // Dibujar HUD
+
+        // --- Dibujar HUD ---
         if (hud != null) {
             hud.draw(g2d);
         }
+
         g.drawImage(canvas, 0, 0, getWidth(), getHeight(), null);
     }
 }
