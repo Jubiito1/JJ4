@@ -10,6 +10,8 @@ import com.mijuego.entities.items.Coin;
 import com.mijuego.entities.enemies.Jumper;
 import com.mijuego.entities.items.Trampoline;
 import com.mijuego.entities.enemies.Shooter;
+import com.mijuego.utils.AudioManager;
+
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -104,6 +106,10 @@ public class LevelManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        AudioManager.stopMusic(); // corta la anterior, si existía
+        AudioManager.startMusic(); // música de fondo en loop
+
+
     }
 
     public void nextLevel() {
@@ -141,6 +147,8 @@ public class LevelManager {
         for (int r = topRow; r <= bottomRow; r++) {
             for (int c = leftCol; c <= rightCol; c++) {
                 if (currentTileMap.getTile(r, c).getType() == Tile.WIN) {
+                    AudioManager.playVictory();   // sonido victoria
+                    AudioManager.stopMusic();     // corta música de fondo
                     return true;
                 }
             }
