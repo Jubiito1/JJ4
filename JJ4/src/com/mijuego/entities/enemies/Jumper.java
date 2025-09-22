@@ -27,7 +27,7 @@ public class Jumper extends Enemies {
 
     public Jumper(double x, double y, TileMap map, Player player) {
         super(x, y, GS.SC(20), GS.SC(20), 100, map); // tamaño y vida ejemplo
-        this.speed = GS.DSC(1.5);
+        this.speed = GS.DSC(1);
         this.facingRight = true;
         this.target = player;
     }
@@ -41,7 +41,7 @@ public class Jumper extends Enemies {
 
         if (!chasing && Math.abs(distX) <= chaseRange) {
             chasing = true; // empieza a perseguir
-            this.speed = GS.DSC(2.8);
+            this.speed = GS.DSC(2);
         } 
         else if (chasing && Math.abs(distX) > loseRange) {
             chasing = false; // deja de perseguir
@@ -91,7 +91,6 @@ public class Jumper extends Enemies {
             dx = facingRight ? speed : -speed;
         }
     }
-
 
     @Override
     public void draw(Graphics2D g, Camera camera) {

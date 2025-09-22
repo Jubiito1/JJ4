@@ -11,10 +11,10 @@ public class Trampoline extends Item {
     
     private int bouncePower = GS.SC(-10); // fuerza del impulso hacia arriba
     
-    public Trampoline(double x, double y, int size) {
-        super(x, y, size, size); 
+    public Trampoline(double x, double y,int width, int height) {
+        super(x, y,width, height); 
     }
-
+    
     @Override
     public void draw(Graphics2D g, Camera camera) {
         if (collected) return; // aunque acá no se "colecciona"

@@ -79,9 +79,16 @@ public class LevelManager {
                         currentTileMap.setTileId(r, c, 0);
                     } 
                     else if (tileId == 8) { // TRAMPOLINE
-                        Trampoline tramp = new Trampoline(c * Tile.SIZE, r * Tile.SIZE, Tile.SIZE);
+                        int trampWidth = Tile.SIZE;
+                        int trampHeight = Tile.SIZE / 2;
+
+                        // posición ajustada: mismo X, pero Y desplazado hacia abajo
+                        int trampX = c * Tile.SIZE;
+                        int trampY = r * Tile.SIZE + (Tile.SIZE - trampHeight);
+
+                        Trampoline tramp = new Trampoline(trampX, trampY, trampWidth, trampHeight);
                         items.add(tramp);
-                        currentTileMap.setTileId(r, c, 0); // lo borramos del mapa para que no se dibuje como tile
+                        currentTileMap.setTileId(r, c, 0); // lo borramos del mapa
                     }
                 }
             }

@@ -36,6 +36,8 @@ public class Player extends Entities {
 
         // Si el jugador ya no tiene vida, no actualizar más
         if (!isAlive()) {
+        	this.width = 0;
+        	this.height = 0;
             // Opcional: podrías agregar efectos de muerte aquí
             return;
         }
