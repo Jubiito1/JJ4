@@ -5,6 +5,7 @@ import com.mijuego.utils.AudioManager;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import com.mijuego.core.Camera;
 import com.mijuego.core.GS;
@@ -12,16 +13,24 @@ import com.mijuego.entities.Player;
 import com.mijuego.map.Tile;
 import com.mijuego.map.TileMap;
 import com.mijuego.utils.CollisionManager;
+import com.mijuego.utils.ResourceManager;
 
 public class Goomba extends Enemies {
 
     private final int DAMAGE_TO_PLAYER = 100;
     private final int DAMAGE_TAKEN = 100; // cantidad de daño que recibe al ser aplastado
+    
+    private BufferedImage spriteDerecha;
+    private BufferedImage spriteIzquierda;
 
     public Goomba(double x, double y, TileMap map) {
         super(x, y, GS.SC(20), GS.SC(20), 100, map); // tamaño y vida ejemplo
         this.speed = GS.DSC(1.5);
         this.facingRight = true;
+
+        // Carga de sprites
+        spriteDerecha = ResourceManager.loadImage("/assets/sprites/foca.png");
+        spriteIzquierda = ResourceManager.loadImage("/assets/sprites/foca1.png");
     }
 
     @Override
@@ -59,13 +68,24 @@ public class Goomba extends Enemies {
         y += dy;
     }
 
-
     @Override
     public void draw(Graphics2D g, Camera camera) {
         if (!active) return;
 
-        g.setColor(new Color(139, 69, 19)); // color marrón
-        g.fillRect((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
+        BufferedImage spriteToDraw = facingRight ? spriteDerecha : spriteIzquierda;
+
+        int drawWidth = width;
+        int drawHeight = height;
+        int drawX = (int)(x - camera.getX());
+        int drawY = (int)(y - camera.getY());
+
+        if (spriteToDraw != null) {
+            g.drawImage(spriteToDraw, drawX, drawY, drawWidth, drawHeight, null);
+        } else {
+            // fallback si falla la carga
+            g.setColor(new Color(139, 69, 19));
+            g.fillRect(drawX, drawY, drawWidth, drawHeight);
+        }
     }
 
     // --- Colisión con jugador ---
@@ -91,14 +111,13 @@ public class Goomba extends Enemies {
 
         // --- Colisión lateral ---
         if (playerBounds.intersects(enemyBounds)) {
-            // Aplicar daño con cooldown
             player.takeDamage(DAMAGE_TO_PLAYER);
 
-            // Cambiar de dirección al Goomba
+            // Cambiar de dirección al chocar
             facingRight = !facingRight;
             dx = facingRight ? speed : -speed;
 
-            // Opcional: separar al jugador para que no se quede pegado
+            // Opcional: separar al jugador
             if (player.getX() < x) {
                 player.setX(x - player.getWidth());
             } else {
@@ -107,3 +126,4 @@ public class Goomba extends Enemies {
         }
     }
 }
+

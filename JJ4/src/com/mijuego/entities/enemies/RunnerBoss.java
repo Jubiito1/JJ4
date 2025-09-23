@@ -3,6 +3,7 @@ package com.mijuego.entities.enemies;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import com.mijuego.core.Camera;
 import com.mijuego.core.GS;
@@ -10,6 +11,7 @@ import com.mijuego.entities.Player;
 import com.mijuego.map.Tile;
 import com.mijuego.map.TileMap;
 import com.mijuego.utils.CollisionManager;
+import com.mijuego.utils.ResourceManager;
 
 public class RunnerBoss extends Enemies {
 
@@ -34,12 +36,20 @@ public class RunnerBoss extends Enemies {
 
     private Player target;
 
+    // 🔹 Sprites
+    private BufferedImage spriteDerecha;
+    private BufferedImage spriteIzquierda;
+
     public RunnerBoss(double x, double y, TileMap map, Player player) {
         super(x, y, GS.SC(40), GS.SC(40), 100, map); // tamaño y vida ejemplo
         this.speed = GS.DSC(1);
         this.facingRight = true;
         this.target = player;
-        this.barWidth = GS.SC(50); // ancho de la barra (puede ajustarse)
+        this.barWidth = GS.SC(50);
+
+        // Cargar sprites
+        spriteDerecha = ResourceManager.loadImage("/assets/sprites/runnerBoss.png");
+        spriteIzquierda = ResourceManager.loadImage("/assets/sprites/runnerBoss1.png");
     }
 
     @Override
@@ -55,18 +65,17 @@ public class RunnerBoss extends Enemies {
         }
 
         if (!enfurecido) {
-        
-	        // --- Comprobar distancia al jugador ---
-	        double distX = target.getX() - this.x;
-	
-	        if (!chasing && Math.abs(distX) <= chaseRange) {
-	            chasing = true; // empieza a perseguir
-	            this.speed = GS.DSC(2.5);
-	        } 
-	        else if (chasing && Math.abs(distX) > loseRange) {
-	            chasing = false; // deja de perseguir
-	            facingRight = !facingRight; // cambia dirección al perderlo
-	        }
+            // --- Comprobar distancia al jugador ---
+            double distX = target.getX() - this.x;
+
+            if (!chasing && Math.abs(distX) <= chaseRange) {
+                chasing = true; // empieza a perseguir
+                this.speed = GS.DSC(2.5);
+            } 
+            else if (chasing && Math.abs(distX) > loseRange) {
+                chasing = false; // deja de perseguir
+                facingRight = !facingRight; // cambia dirección al perderlo
+            }
         }
 
         // --- Movimiento horizontal ---
@@ -102,7 +111,7 @@ public class RunnerBoss extends Enemies {
         int row = (int)(y / Tile.SIZE);
 
         boolean bloque1 = map.isTileSolid(row, col);        // primer bloque frente a él
-        boolean bloque2 = map.isTileSolid(row - 4, col);    // segundo bloque arriba del primero
+        boolean bloque2 = map.isTileSolid(row - 4, col);    // bloque arriba del primero
 
         if (bloque1 && !bloque2) {
             // Muro de 1 tile → lo salta
@@ -118,14 +127,24 @@ public class RunnerBoss extends Enemies {
     public void draw(Graphics2D g, Camera camera) {
         if (!active) return;
 
-        g.setColor(Color.CYAN);// color 
-        g.fillRect((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
-        
-        int screenX = (int)(x - camera.getX());
-        int screenY = (int)(y - camera.getY());
-        
-        int barX = screenX + width / 2 - barWidth / 2;
-        int barY = screenY - 10;
+        BufferedImage spriteToDraw = facingRight ? spriteDerecha : spriteIzquierda;
+
+        int drawX = (int)(x - camera.getX());
+        int drawY = (int)(y - camera.getY());
+        int drawWidth = width;
+        int drawHeight = height;
+
+        if (spriteToDraw != null) {
+            g.drawImage(spriteToDraw, drawX, drawY, drawWidth, drawHeight, null);
+        } else {
+            // fallback si no carga la imagen
+            g.setColor(Color.CYAN);
+            g.fillRect(drawX, drawY, drawWidth, drawHeight);
+        }
+
+        // --- Barra de vida ---
+        int barX = drawX + width / 2 - barWidth / 2;
+        int barY = drawY - 10;
 
         // Fondo de la barra (gris)
         g.setColor(Color.GRAY);
@@ -168,14 +187,13 @@ public class RunnerBoss extends Enemies {
 
         // --- Colisión lateral ---
         if (playerBounds.intersects(enemyBounds)) {
-            // Aplicar daño con cooldown
             player.takeDamage(DAMAGE_TO_PLAYER);
 
-            // Cambiar de dirección al Goomba
+            // Cambiar de dirección
             facingRight = !facingRight;
             dx = facingRight ? speed : -speed;
 
-            // Opcional: separar al jugador para que no se quede pegado
+            // Separar al jugador
             if (player.getX() < x) {
                 player.setX(x - player.getWidth());
             } else {
@@ -184,3 +202,4 @@ public class RunnerBoss extends Enemies {
         }
     }
 }
+

@@ -5,12 +5,14 @@ import com.mijuego.utils.AudioManager;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import com.mijuego.core.Camera;
 import com.mijuego.core.GS;
 import com.mijuego.entities.Player;
 import com.mijuego.map.TileMap;
 import com.mijuego.utils.CollisionManager;
+import com.mijuego.utils.ResourceManager;
 
 public class JumperBoss extends Enemies {
 
@@ -24,11 +26,19 @@ public class JumperBoss extends Enemies {
     private int barWidth;
     private int barHeight = GS.SC(5); // altura de la barra de vida
 
+    // 🔹 Sprites
+    private BufferedImage spriteDerecha;
+    private BufferedImage spriteIzquierda;
+
     public JumperBoss(double x, double y, TileMap map) {
         super(x, y, GS.SC(40), GS.SC(40), 100, map); // tamaño y vida ejemplo
         this.speed = GS.DSC(2.5);
         this.facingRight = true;
         this.barWidth = GS.SC(50);
+
+        // Cargar sprites
+        spriteDerecha = ResourceManager.loadImage("/assets/sprites/jumperBoss.png");
+        spriteIzquierda = ResourceManager.loadImage("/assets/sprites/jumperBoss1.png");
     }
 
     @Override
@@ -55,7 +65,7 @@ public class JumperBoss extends Enemies {
         CollisionManager.checkTileCollisionY(this, map);
         y += dy;
 
-        // --- Aquí detectamos si tocó el suelo ---
+        // --- Detectar si tocó el suelo ---
         if (dy == 0 && oldDy > 0) {
             onGround = true;
         }
@@ -69,22 +79,30 @@ public class JumperBoss extends Enemies {
         x += dx;
     }
 
-
-
     @Override
     public void draw(Graphics2D g, Camera camera) {
         if (!active) return;
 
-        g.setColor(Color.DARK_GRAY); // color marrón
-        g.fillRect((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
-        
-        int screenX = (int)(x - camera.getX());
-        int screenY = (int)(y - camera.getY());
-        
-        int barX = screenX + width / 2 - barWidth / 2;
-        int barY = screenY - 10;
+        BufferedImage spriteToDraw = facingRight ? spriteDerecha : spriteIzquierda;
 
-        // Fondo de la barra (gris)
+        int drawX = (int)(x - camera.getX());
+        int drawY = (int)(y - camera.getY());
+        int drawWidth = width;
+        int drawHeight = height;
+
+        if (spriteToDraw != null) {
+            g.drawImage(spriteToDraw, drawX, drawY, drawWidth, drawHeight, null);
+        } else {
+            // fallback si no carga la imagen
+            g.setColor(Color.DARK_GRAY);
+            g.fillRect(drawX, drawY, drawWidth, drawHeight);
+        }
+
+        // --- Barra de vida ---
+        int barX = drawX + width / 2 - barWidth / 2;
+        int barY = drawY - 10;
+
+        // Fondo (gris)
         g.setColor(Color.GRAY);
         g.fillRect(barX, barY, barWidth, barHeight);
 
@@ -117,7 +135,7 @@ public class JumperBoss extends Enemies {
                 if (!isAlive()) {
                     deactivate();
                     AudioManager.playGoombaStomp();
-                    player.addCoins(2); // suma 200 puntos al matar enemigo
+                    player.addCoins(2);
                 }
                 return;
             }
@@ -125,14 +143,13 @@ public class JumperBoss extends Enemies {
 
         // --- Colisión lateral ---
         if (playerBounds.intersects(enemyBounds)) {
-            // Aplicar daño con cooldown
             player.takeDamage(DAMAGE_TO_PLAYER);
 
-            // Cambiar de dirección al Goomba
+            // Cambiar de dirección
             facingRight = !facingRight;
             dx = facingRight ? speed : -speed;
 
-            // Opcional: separar al jugador para que no se quede pegado
+            // Separar al jugador
             if (player.getX() < x) {
                 player.setX(x - player.getWidth());
             } else {
@@ -141,3 +158,4 @@ public class JumperBoss extends Enemies {
         }
     }
 }
+
