@@ -134,7 +134,6 @@ public class Shooter extends Enemies {
         Rectangle playerBounds = player.getBounds();
 
         if (playerBounds.intersects(enemyBounds)) {
-           
             facingRight = !facingRight;
             dx = facingRight ? speed : -speed;
 
@@ -172,4 +171,3 @@ public class Shooter extends Enemies {
         }
     }
 }
-

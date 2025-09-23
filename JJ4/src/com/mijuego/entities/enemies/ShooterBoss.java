@@ -187,7 +187,7 @@ public class ShooterBoss extends Enemies {
         }
 
         if (playerBounds.intersects(enemyBounds)) {
-            
+
 
             facingRight = !facingRight;
             dx = facingRight ? speed : -speed;
