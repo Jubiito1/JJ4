@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
-
+import com.mijuego.core.LevelManager;
 import com.mijuego.entities.Entities;
 import com.mijuego.entities.Player;
 import com.mijuego.ui.HUD;
@@ -191,6 +191,15 @@ public class GamePanel extends JPanel {
         } else {
             restartButton.setVisible(false);
         }
+        if (LevelManager.currentLevel==4) {
+			restartButton.setVisible(true);
+			restartButton.setSize(btnW, btnH);
+			restartButton.setLocation(
+			    (getWidth() - btnW) / 2,
+			    (getHeight() - btnH) / 2
+			
+			);
+		}
     }
 
 }

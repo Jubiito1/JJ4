@@ -20,6 +20,9 @@ public class GameLoop implements Runnable {
 
     private GamePanel panel;
     private GameState gameState = GameState.PLAYING;
+    private boolean pasoKeyPrev = false;
+
+    
 
     public GameLoop(GamePanel panel) {
         this.panel = panel;
@@ -79,15 +82,17 @@ public class GameLoop implements Runnable {
                 Player player = panel.getLevelManager().getPlayer();
                 LevelManager lm = panel.getLevelManager();
 
-                // Comprobar si tocó la tile WIN
+                // comprobar si se pulsó la tecla de "paso de nivel"
+                boolean pasoNow = InputManager.isPasoLevel(); // suponiendo que existe este método
+                if (pasoNow && !pasoKeyPrev) {
+                   
+                    advanceLevel(lm);
+                }
+                pasoKeyPrev = pasoNow; // actualizar estado previo
+
+                // --- Comprobar si tocó la tile WIN (victoria por llegar a la salida) ---
                 if (player != null && lm.checkWin(player)) {
-                    lm.nextLevel();
-                    panel.getEntities().clear();
-                    panel.getEntities().addAll(lm.getEnemies());
-                    panel.getEntities().addAll(lm.getItems());
-                    if (lm.getPlayer() != null) panel.getEntities().add(lm.getPlayer());
-                    panel.getCamera().setMap(lm.getCurrentTileMap());
-                    player = lm.getPlayer();
+                    advanceLevel(lm);
                 }
 
                 // Actualizar todas las entidades
@@ -99,7 +104,7 @@ public class GameLoop implements Runnable {
                     }
                 }
 
-                // Eliminar items recolectados
+                // Eliminar items recolectados (una sola vez)
                 panel.getEntities().removeIf(e -> (e instanceof Item) && ((Item)e).isCollected());
 
                 // Colisiones player ↔ enemigos
@@ -112,11 +117,6 @@ public class GameLoop implements Runnable {
                         if (e instanceof JumperBoss) ((JumperBoss)e).checkPlayerCollision(player);
                     }
                 }
-                
-                
-             // Eliminar items recolectados
-                panel.getEntities().removeIf(e -> (e instanceof Item) && ((Item)e).isCollected());
-
 
                 // Actualizar cámara
                 if (player != null) panel.getCamera().follow(player);
@@ -128,6 +128,18 @@ public class GameLoop implements Runnable {
         }
     }
 
+    // centraliza avanzar nivel y evita doble avance rápido 
+    private void advanceLevel(LevelManager lm) {
+        lm.nextLevel();
+        // actualizar entidades del panel
+        panel.getEntities().clear();
+        panel.getEntities().addAll(lm.getEnemies());
+        panel.getEntities().addAll(lm.getItems());
+        if (lm.getPlayer() != null) panel.getEntities().add(lm.getPlayer());
+
+        
+      
+    }
 
     public GameState getGameState() {
         return gameState;

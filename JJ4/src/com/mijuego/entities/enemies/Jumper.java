@@ -19,7 +19,7 @@ public class Jumper extends Enemies {
     private final int DAMAGE_TAKEN = 50; // cantidad de daño que recibe al ser aplastado
     
     private final double GRAVITY = GS.DSC(0.2);
-    private final double JUMP_SPEED = GS.DSC(-3);
+    private final double JUMP_SPEED = GS.DSC(-2);
 
     private double chaseRange = 10 * Tile.SIZE;  // rango para empezar a perseguir
     private double loseRange  = 15 * Tile.SIZE;  // rango para dejar de perseguir

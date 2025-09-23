@@ -46,6 +46,7 @@ public class ShooterBoss extends Enemies {
         this.player = player;
         this.barWidth = GS.SC(50);
         this.speed = GS.DSC(1.5);
+        this.isBoss = true;
 
         // Cargar textura del jefe
         spriteShooterBoss = ResourceManager.loadImage("/assets/sprites/shooterBoss.png");
@@ -221,7 +222,7 @@ public class ShooterBoss extends Enemies {
 
         public void draw(Graphics2D g, Camera camera) {
             if (!isAlive()) return;
-            g.setColor(Color.GREEN);
+            g.setColor(Color.white);
             g.fillOval((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
         }
     }

@@ -33,6 +33,7 @@ public class InputManager implements KeyListener {
     public static boolean isUp() {
         return keys[KeyEvent.VK_UP];
     }
+    
 
     public static boolean isDown() {
         return keys[KeyEvent.VK_DOWN];
@@ -48,5 +49,8 @@ public class InputManager implements KeyListener {
 
     public static boolean isEsc() {
         return keys[KeyEvent.VK_ESCAPE];
+    }
+    public static boolean isPasoLevel() {
+        return keys[KeyEvent.VK_P];
     }
 }

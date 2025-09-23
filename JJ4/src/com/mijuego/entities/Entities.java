@@ -11,6 +11,7 @@ public abstract class Entities {
     protected double dx, dy;         // velocidad en x e y
     protected int health;  // estado vivo o muerto
     protected boolean onGround = false;
+    
 
     public Entities(double x, double y, int width, int height, int health) {
         this.x = x;
@@ -19,6 +20,9 @@ public abstract class Entities {
         this.height = height;
         this.health = health;
     }
+  
+
+    
 
     // 🔹 Actualizar la lógica de la entidad (se implementa en subclases)
     public abstract void update();

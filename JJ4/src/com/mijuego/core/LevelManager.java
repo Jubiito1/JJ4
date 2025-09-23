@@ -16,7 +16,7 @@ import java.util.List;
 
 public class LevelManager {
 
-    private int currentLevel = 1;
+    public static int currentLevel = 1;
     private TileMap currentTileMap;
     private Tile[] tileset;
     private List<Entities> enemies;
@@ -152,22 +152,36 @@ public class LevelManager {
     }
 
     // comprobación de tile win (amarillo)
+ // comprobación de tile win (amarillo)
     public boolean checkWin(Player player) {
         int tileSize = Tile.SIZE;
         int leftCol = (int)player.getX() / tileSize;
         int rightCol = (int)(player.getX() + player.getWidth() - 1) / tileSize;
         int topRow = (int)player.getY() / tileSize;
         int bottomRow = (int)(player.getY() + player.getHeight() - 1) / tileSize;
+        
 
         for (int r = topRow; r <= bottomRow; r++) {
             for (int c = leftCol; c <= rightCol; c++) {
                 if (currentTileMap.getTile(r, c).getType() == Tile.WIN) {
-                    AudioManager.playVictory();   // sonido victoria
-                    AudioManager.stopMusic();     // corta música de fondo
+
+                    // 🔹 Paso 1: verificar si todavía quedan bosses vivos
+                    boolean bossesAlive = enemies.stream()
+                            .anyMatch(e -> e instanceof Enemies && ((Enemies)e).IsBoss() && e.isAlive());
+                    
+                    if (bossesAlive) {
+                        // el jugador llegó a la meta, pero todavía quedan bosses → no gana
+                        return false;
+                    }
+
+                    // 🔹 Paso 2: si no hay bosses → victoria real
+                    AudioManager.playVictory();
+                    AudioManager.stopMusic();
                     return true;
                 }
             }
         }
         return false;
     }
+
 }

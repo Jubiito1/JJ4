@@ -166,7 +166,7 @@ public class Shooter extends Enemies {
 
         public void draw(Graphics2D g, Camera camera) {
             if (!isAlive()) return;
-            g.setColor(java.awt.Color.GREEN);
+            g.setColor(java.awt.Color.white);
             g.fillOval((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
         }
     }

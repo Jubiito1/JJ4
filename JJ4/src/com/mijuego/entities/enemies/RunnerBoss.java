@@ -46,6 +46,7 @@ public class RunnerBoss extends Enemies {
         this.facingRight = true;
         this.target = player;
         this.barWidth = GS.SC(50);
+        this.isBoss = true;
 
         // Cargar sprites
         spriteDerecha = ResourceManager.loadImage("/assets/sprites/runnerBoss.png");

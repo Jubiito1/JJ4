@@ -35,6 +35,7 @@ public class JumperBoss extends Enemies {
         this.speed = GS.DSC(2.5);
         this.facingRight = true;
         this.barWidth = GS.SC(50);
+        this.isBoss = true;
 
         // Cargar sprites
         spriteDerecha = ResourceManager.loadImage("/assets/sprites/jumperBoss.png");

@@ -16,6 +16,7 @@ public abstract class Enemies extends Entities {
     protected double speed;       // velocidad de movimiento
     protected boolean facingRight; // dirección del enemigo
     protected boolean active;     // si está activo (puede usarse para spawnear/despawning)
+    protected boolean isBoss = false;
 
     public Enemies(double x, double y, int width, int height, int health, TileMap map) {
         super(x, y, width, height, health);
@@ -37,6 +38,9 @@ public abstract class Enemies extends Entities {
     public boolean isFacingRight() {
         return facingRight;
     }
+    public boolean IsBoss() {
+		return isBoss;
+	}
 
     public void setFacingRight(boolean facingRight) {
         this.facingRight = facingRight;
