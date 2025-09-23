@@ -6,12 +6,14 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import com.mijuego.entities.Player;
 import com.mijuego.map.TileMap;
 import com.mijuego.map.Tile;
 import com.mijuego.core.GS;
 import com.mijuego.core.Camera;
 import com.mijuego.entities.Entities;
+import com.mijuego.utils.AudioManager;
 import com.mijuego.utils.ResourceManager;
 
 public class Shooter extends Enemies {
@@ -128,6 +130,7 @@ public class Shooter extends Enemies {
         if (intersects && isAbove && player.getDy() > 0) {
             takeDamage(this.getHealth());
             player.setDy(GS.DSC(-5));
+            AudioManager.playGoombaStomp();
         }
 
         Rectangle enemyBounds = this.getBounds();

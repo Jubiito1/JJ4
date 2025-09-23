@@ -132,10 +132,11 @@ public class JumperBoss extends Enemies {
         if (player.getDy() > 0 && playerBounds.intersects(enemyBounds)) {
             if (player.getY() + player.getHeight() - GS.SC(5) < y + height / GS.DSC(2)) {
                 this.damage(DAMAGE_TAKEN);
-                player.setDy(GS.DSC(-5)); // rebote vertical
+                player.setDy(GS.DSC(-5));
+                AudioManager.playGoombaStomp(); // rebote vertical
                 if (!isAlive()) {
                     deactivate();
-                    AudioManager.playGoombaStomp();
+
                     player.addCoins(2);
                 }
                 return;

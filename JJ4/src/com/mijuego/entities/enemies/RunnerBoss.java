@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-
+import com.mijuego.utils.AudioManager;
 import com.mijuego.core.Camera;
 import com.mijuego.core.GS;
 import com.mijuego.entities.Player;
@@ -180,7 +180,8 @@ public class RunnerBoss extends Enemies {
                 this.enfurecidoTimer = ENFURECIDO_DURATION;
                 this.chasing = false;
                 this.speed = GS.DSC(6);
-                player.setDy(GS.DSC(-5)); // rebote vertical
+                player.setDy(GS.DSC(-5));
+                AudioManager.playGoombaStomp();// rebote vertical
                 if (!isAlive()) deactivate();
                 return;
             }

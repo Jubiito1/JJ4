@@ -4,12 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-
 import com.mijuego.core.Camera;
 import com.mijuego.core.GS;
 import com.mijuego.entities.Player;
 import com.mijuego.map.Tile;
 import com.mijuego.map.TileMap;
+import com.mijuego.utils.AudioManager;
 import com.mijuego.utils.CollisionManager;
 import com.mijuego.utils.ResourceManager;
 
@@ -135,6 +135,7 @@ public class Jumper extends Enemies {
                 this.damage(DAMAGE_TAKEN);
                 player.setDy(GS.DSC(-5)); // rebote vertical
                 if (!isAlive()) deactivate();
+                AudioManager.playGoombaStomp();
                 return;
             }
         }

@@ -6,10 +6,9 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.mijuego.utils.AudioManager;
 import com.mijuego.entities.Player;
 import com.mijuego.map.TileMap;
-import com.mijuego.utils.AudioManager;
 import com.mijuego.utils.CollisionManager;
 import com.mijuego.map.Tile;
 import com.mijuego.core.GS;
@@ -178,9 +177,10 @@ public class ShooterBoss extends Enemies {
             if (player.getY() + player.getHeight() - GS.SC(5) < y + height / GS.DSC(2)) {
                 this.damage(DAMAGE_TAKEN);
                 player.setDy(GS.DSC(-5));
+                AudioManager.playGoombaStomp();
                 if (!isAlive()) {
                     deactivate();
-                    AudioManager.playGoombaStomp();
+                    
                     player.addCoins(2);
                 }
                 return;
