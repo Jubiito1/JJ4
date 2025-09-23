@@ -24,6 +24,7 @@ public class GamePanel extends JPanel {
     private LevelManager levelManager;
     private Camera camera;
     private javax.swing.JButton restartButton;
+    private javax.swing.JLabel victoryLabel;
     int btnW = GS.SC(380);
     int btnH = GS.SC(120);
 
@@ -77,6 +78,31 @@ public class GamePanel extends JPanel {
             ex.printStackTrace();
             restartButton.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, fontSize));
         }
+        
+        
+        
+        
+        victoryLabel = new javax.swing.JLabel("¡VICTORIA!");
+        victoryLabel.setOpaque(true);
+        victoryLabel.setBackground(Color.BLACK);
+        victoryLabel.setForeground(Color.WHITE);
+        victoryLabel.setVisible(false); // inicialmente oculto
+        victoryLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        
+        try {
+            InputStream is = getClass().getResourceAsStream("/assets/fonts/Pixeled.ttf");
+            java.awt.Font pixelFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, is)
+                                                  .deriveFont((float) fontSize);
+            victoryLabel.setFont(pixelFont);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            victoryLabel.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, fontSize));
+        }
+
+        victoryLabel.setBounds(0, getHeight() / 4, getWidth(), GS.SC(100));
+        this.add(victoryLabel);
+        
 
 
         this.setLayout(null);
@@ -190,15 +216,21 @@ public class GamePanel extends JPanel {
             );
         } else {
             restartButton.setVisible(false);
+            victoryLabel.setVisible(false);
         }
         if (LevelManager.currentLevel==4) {
 			restartButton.setVisible(true);
 			restartButton.setSize(btnW, btnH);
-			restartButton.setLocation(
-			    (getWidth() - btnW) / 2,
-			    (getHeight() - btnH) / 2
+			restartButton.setLocation((getWidth() - btnW) / 2, (getHeight() - btnH) / 2);
 			
-			);
+			victoryLabel.setVisible(true);
+		    victoryLabel.setSize(btnW, btnH); // mismo tamaño que el botón
+		    victoryLabel.setLocation(
+		        (getWidth() - btnW) / 2,
+		        (getHeight() - btnH) / 2 - GS.SC(140)
+			    );
+			
+			
 		}
     }
 
