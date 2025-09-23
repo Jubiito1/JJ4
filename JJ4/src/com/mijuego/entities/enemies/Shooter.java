@@ -16,8 +16,6 @@ import com.mijuego.entities.Entities;
 public class Shooter extends Enemies {
 
     private Player player;
-    
-    private final int DAMAGE_TO_PLAYER = 100;
 
     private int shootCooldown = 0;
     private final int SHOOT_COOLDOWN_FRAMES = 90;
@@ -129,8 +127,6 @@ public class Shooter extends Enemies {
         Rectangle playerBounds = player.getBounds();
         
         if (playerBounds.intersects(enemyBounds)) {
-            // Aplicar daño con cooldown
-            player.takeDamage(DAMAGE_TO_PLAYER);
 
             // Cambiar de dirección al Goomba
             facingRight = !facingRight;
