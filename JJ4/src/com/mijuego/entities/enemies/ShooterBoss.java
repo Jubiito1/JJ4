@@ -3,6 +3,7 @@ package com.mijuego.entities.enemies;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,51 +15,55 @@ import com.mijuego.map.Tile;
 import com.mijuego.core.GS;
 import com.mijuego.core.Camera;
 import com.mijuego.entities.Entities;
+import com.mijuego.utils.ResourceManager;
 
 public class ShooterBoss extends Enemies {
 
     private Player player;
     
     private final int DAMAGE_TAKEN = 10;
-    private final int DAMAGE_TO_PLAYER = 100;
+
 
     private int shootCooldown = 0;
     private final int SHOOT_COOLDOWN_FRAMES = 90;
     
     private final int maxHealth = 100;
     
-    private double chaseRange = 20 * Tile.SIZE;  // rango para empezar a perseguir
-    private double loseRange  = 20 * Tile.SIZE;  // rango para dejar de perseguir
+    private double chaseRange = 20 * Tile.SIZE;
+    private double loseRange  = 20 * Tile.SIZE;
     private boolean chasing = false;
     
     private int barWidth;
-    private int barHeight = GS.SC(5); // altura de la barra de vida
+    private int barHeight = GS.SC(5);
 
     private List<Bullet> bullets = new ArrayList<>();
 
+    // 🔹 Sprite del jefe
+    private BufferedImage spriteShooterBoss;
+
     public ShooterBoss(double x, double y, TileMap map, Player player) {
-        super(x, y, GS.SC(40), GS.SC(40), 100, map); // tamaño, salud, mapa
+        super(x, y, GS.SC(40), GS.SC(40), 100, map);
         this.player = player;
         this.barWidth = GS.SC(50);
         this.speed = GS.DSC(1.5);
+
+        // Cargar textura del jefe
+        spriteShooterBoss = ResourceManager.loadImage("/assets/sprites/shooterBoss.png");
     }
 
     @Override
     public void update() {
-        if (!isAlive()) return; // Si está muerto, no hace nada
+        if (!isAlive()) return;
         
         dx = facingRight ? speed : -speed;
 
-        // --- Colisión X con tiles ---
         CollisionManager.checkTileCollisionX(this, map);
 
-        // Si chocó con pared (dx se volvió 0), cambiar de dirección
         if (dx == 0) {
             facingRight = !facingRight;
             dx = facingRight ? speed : -speed;
         }
 
-        // --- Verificar borde de caída ---
         int nextCol = facingRight 
             ? (int)((x + width + dx) / Tile.SIZE)
             : (int)((x + dx) / Tile.SIZE);
@@ -71,23 +76,19 @@ public class ShooterBoss extends Enemies {
 
         x += dx;
 
-        // --- Gravedad simple ---
-        dy += GS.DSC(0.2); // gravedad
+        dy += GS.DSC(0.2);
         CollisionManager.checkTileCollisionY(this, map);
         y += dy;
         
         double distX = player.getX() - this.x;
         
         if (!chasing && Math.abs(distX) <= chaseRange) {
-            chasing = true; // empieza a perseguir
-        } 
-        else if (chasing && Math.abs(distX) > loseRange) {
-            chasing = false; // deja de perseguir
+            chasing = true;
+        } else if (chasing && Math.abs(distX) > loseRange) {
+            chasing = false;
         }
         
         if (chasing) {
-            // perseguir al jugador
-            // disparo
             if (shootCooldown <= 0) {
                 shoot();
                 shootCooldown = SHOOT_COOLDOWN_FRAMES;
@@ -96,16 +97,14 @@ public class ShooterBoss extends Enemies {
             }
         }
         
-        // actualizar balas
         bullets.removeIf(b -> !b.isAlive());
         for (Bullet b : bullets) {
             b.update();
 
-            // Verificar colisión con player
             if (b.isAlive() && player != null && player.isAlive()) {
                 if (b.getBounds().intersects(player.getBounds())) {
-                    player.takeDamage(1); // le quitamos vida al player
-                    b.damage(b.getHealth()); // destruimos la bala
+                    player.takeDamage(1);
+                    b.damage(b.getHealth());
                 }
             }
         }
@@ -115,39 +114,39 @@ public class ShooterBoss extends Enemies {
     public void draw(Graphics2D g, Camera camera) {
         if (!isAlive()) return;
 
-        g.setColor(Color.ORANGE);
-        g.fillRect((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
+        int drawX = (int)(x - camera.getX());
+        int drawY = (int)(y - camera.getY());
+
+        if (spriteShooterBoss != null) {
+            g.drawImage(spriteShooterBoss, drawX, drawY, width, height, null);
+        } else {
+            g.setColor(Color.ORANGE);
+            g.fillRect(drawX, drawY, width, height);
+        }
 
         for (Bullet b : bullets) b.draw(g, camera);
         
-        int screenX = (int)(x - camera.getX());
-        int screenY = (int)(y - camera.getY());
-        
-        int barX = screenX + width / 2 - barWidth / 2;
-        int barY = screenY - 10;
+        // 🔹 Barra de vida
+        int barX = drawX + width / 2 - barWidth / 2;
+        int barY = drawY - 10;
 
-        // Fondo de la barra (gris)
         g.setColor(Color.GRAY);
         g.fillRect(barX, barY, barWidth, barHeight);
 
-        // Vida actual (verde)
         int healthWidth = (int)((health / (double) maxHealth) * barWidth);
         g.setColor(Color.GREEN);
         g.fillRect(barX, barY, healthWidth, barHeight);
 
-        // Vida perdida (roja)
         g.setColor(Color.RED);
         g.fillRect(barX + healthWidth, barY, barWidth - healthWidth, barHeight);
 
-        // Borde negro
         g.setColor(Color.BLACK);
         g.drawRect(barX, barY, barWidth, barHeight);
     }
 
     private void shoot() {
-        double bulletSpeed = GS.SC(4); // velocidad, la escala ya la aplicamos
+        double bulletSpeed = GS.SC(4);
 
-        // calcular dirección hacia el jugador
         double dx = player.getX() + player.getWidth()/2 - (x + width/2);
         double dy = player.getY() + player.getHeight()/2 - (y + height/2);
 
@@ -155,17 +154,16 @@ public class ShooterBoss extends Enemies {
         dx = dx / dist * bulletSpeed;
         dy = dy / dist * bulletSpeed;
 
-        // tamaño de la bala más grande, por ejemplo 10x10 escalado
         int bulletSize = GS.SC(8);
 
         bullets.add(new Bullet(x + width/2 - bulletSize/2, y + height/2 - bulletSize/2, bulletSize, bulletSize, dx, dy));
     }
+
     public void takeDamage(int amount) {
-        this.damage(amount); // reduce health
+        this.damage(amount);
         if (!isAlive()) {
-           
-            bullets.clear(); // destruye todas las balas activas
-            active = false;  // marca al enemigo como inactivo
+            bullets.clear();
+            active = false;
         }
     }
 
@@ -175,30 +173,25 @@ public class ShooterBoss extends Enemies {
         Rectangle enemyBounds = this.getBounds();
         Rectangle playerBounds = player.getBounds();
 
-        // --- Jugador cayendo sobre el enemigo (aplasta) ---
         if (player.getDy() > 0 && playerBounds.intersects(enemyBounds)) {
             if (player.getY() + player.getHeight() - GS.SC(5) < y + height / GS.DSC(2)) {
                 this.damage(DAMAGE_TAKEN);
-                player.setDy(GS.DSC(-5)); // rebote vertical
+                player.setDy(GS.DSC(-5));
                 if (!isAlive()) {
                     deactivate();
                     AudioManager.playGoombaStomp();
-                    player.addCoins(2); // suma 200 puntos al matar enemigo
+                    player.addCoins(2);
                 }
                 return;
             }
         }
 
-        // --- Colisión lateral ---
         if (playerBounds.intersects(enemyBounds)) {
-            // Aplicar daño con cooldown
-            player.takeDamage(DAMAGE_TO_PLAYER);
+            
 
-            // Cambiar de dirección al Goomba
             facingRight = !facingRight;
             dx = facingRight ? speed : -speed;
 
-            // Opcional: separar al jugador para que no se quede pegado
             if (player.getX() < x) {
                 player.setX(x - player.getWidth());
             } else {
@@ -207,8 +200,6 @@ public class ShooterBoss extends Enemies {
         }
     }
 
-
-    // Clase interna para proyectiles
     public class Bullet extends Entities {
         private double dx, dy;
 
@@ -223,7 +214,6 @@ public class ShooterBoss extends Enemies {
             x += dx;
             y += dy;
 
-            // destruir si sale del mapa
             if (x < 0 || x > map.getCols() * Tile.SIZE || y < 0 || y > map.getRows() * Tile.SIZE) {
                 this.damage(this.getHealth());
             }
@@ -232,9 +222,7 @@ public class ShooterBoss extends Enemies {
         public void draw(Graphics2D g, Camera camera) {
             if (!isAlive()) return;
             g.setColor(Color.GREEN);
-            // Dibujar óvalo en vez de rectángulo
             g.fillOval((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
         }
-
     }
 }
