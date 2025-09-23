@@ -2,6 +2,7 @@ package com.mijuego.entities;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import com.mijuego.utils.AudioManager;
 import com.mijuego.map.TileMap;
 import com.mijuego.map.Tile;
@@ -9,6 +10,7 @@ import com.mijuego.utils.CollisionManager;
 import com.mijuego.utils.InputManager;
 import com.mijuego.core.GS;
 import com.mijuego.core.Camera;
+import com.mijuego.utils.ResourceManager;
 
 public class Player extends Entities {
 
@@ -25,9 +27,28 @@ public class Player extends Entities {
     private final double JUMP_SPEED = GS.DSC(-5);
     private final double MOVE_SPEED = GS.DSC(3);
 
+    // Sprites
+    private BufferedImage spriteQuieto;
+    private BufferedImage spriteQuieto2;
+    private BufferedImage spriteMov;
+    private BufferedImage spriteMov2;
+    private BufferedImage spriteSalto;
+    private BufferedImage spriteSalto2;
+    private String lastDirection = "right"; // "left" or "right"
+    private int animFrame = 0;
+    private int animCounter = 0;
+    private final int ANIM_SPEED = 7; // frames por cambio de sprite
+
     public Player(double x, double y, int width, int height, int health, TileMap map) {
-        super(x, y, width, height, 3); // health inicial en 3
+        super(x, y, width, height, health); 
         this.map = map;
+        // Cargar sprites
+        spriteQuieto = ResourceManager.loadImage("/assets/sprites/pinguinoQuieto.png");
+        spriteMov = ResourceManager.loadImage("/assets/sprites/PinguinoMov.png");
+        spriteQuieto2 = ResourceManager.loadImage("/assets/sprites/pinguinoQuieto2.png");
+        spriteMov2 = ResourceManager.loadImage("/assets/sprites/PinguinoMov2.png");
+        spriteSalto = ResourceManager.loadImage("/assets/sprites/pinguinoSalto.png");
+        spriteSalto2 = ResourceManager.loadImage("/assets/sprites/pinguinoSalto2.png");
     }
 
     @Override
@@ -44,8 +65,22 @@ public class Player extends Entities {
 
         // 🔹 Movimiento horizontal
         dx = 0;
-        if (InputManager.isLeft())  dx = -MOVE_SPEED;
-        if (InputManager.isRight()) dx = MOVE_SPEED;
+        boolean moving = false;
+        boolean movingRight = false;
+        boolean movingLeft = false;
+        if (InputManager.isLeft())  { dx = -MOVE_SPEED; moving = true; movingLeft = true; lastDirection = "left"; }
+        if (InputManager.isRight()) { dx = MOVE_SPEED; moving = true; movingRight = true; lastDirection = "right"; }
+        // Animación de pasos
+        if (moving && onGround) {
+            animCounter++;
+            if (animCounter >= ANIM_SPEED) {
+                animCounter = 0;
+                animFrame = (animFrame + 1) % 2; // solo dos frames por dirección
+            }
+        } else {
+            animFrame = 0;
+            animCounter = 0;
+        }
 
         // 🔹 Salto
         if (InputManager.isUp() && onGround) {
@@ -132,14 +167,43 @@ public class Player extends Entities {
     @Override
     public void draw(Graphics2D g, Camera camera) {
         if (!isAlive()) {
-            // No dibujar nada si está muerto
+            // No dibujar nada si esta muerto
             return;
         }
-        g.setColor(color);
-        g.fillRect(
-            (int)(x - camera.getX()),
-            (int)(y - camera.getY()),
-            width, height
-        );
+        BufferedImage spriteToDraw;
+        if (!onGround) {
+            // En el aire, mostrar sprite de salto según última dirección
+            spriteToDraw = lastDirection.equals("right") ? spriteSalto : spriteSalto2;
+        } else if (dx == 0) {
+            // Quieto, mostrar sprite según última dirección
+            spriteToDraw = lastDirection.equals("right") ? spriteQuieto : spriteQuieto2;
+        } else if (dx > 0) {
+            // Animación derecha
+            spriteToDraw = (animFrame == 0) ? spriteQuieto : spriteMov;
+        } else {
+            // Animación izquierda
+            spriteToDraw = (animFrame == 0) ? spriteQuieto2 : spriteMov2;
+        }
+        // Usar GS.SC para escalar el tamaño del sprite
+        int drawWidth = GS.SC(20);
+        int drawHeight = GS.SC(20);
+        int drawX = (int)(x - camera.getX());
+        int drawY = (int)(y - camera.getY());
+        if (spriteToDraw != null) {
+            g.drawImage(
+                spriteToDraw,
+                drawX,
+                drawY,
+                drawWidth, drawHeight,
+                null
+            );
+        } else {
+            g.setColor(color);
+            g.fillRect(
+                drawX,
+                drawY,
+                drawWidth, drawHeight
+            );
+        }
     }
 }

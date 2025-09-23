@@ -69,7 +69,7 @@ public class LevelManager {
                         currentTileMap.setTileId(r, c, 0);
                     } 
                     else if (tileId == 3) {
-                        player = new Player(c * Tile.SIZE, r * Tile.SIZE, GS.SC(20), GS.SC(20), 100, currentTileMap);
+                        player = new Player(c * Tile.SIZE, r * Tile.SIZE, GS.SC(20), GS.SC(20), 3, currentTileMap);
                         currentTileMap.setTileId(r, c, 0);
                     }
                     else if (tileId == 6) {
