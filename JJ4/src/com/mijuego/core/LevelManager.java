@@ -4,14 +4,11 @@ import com.mijuego.map.Tile;
 import com.mijuego.map.TileMap;
 import com.mijuego.utils.ResourceManager;
 import com.mijuego.entities.Entities;
-import com.mijuego.entities.enemies.Goomba;
 import com.mijuego.entities.Player;
 import com.mijuego.entities.items.Coin;
-import com.mijuego.entities.enemies.Jumper;
 import com.mijuego.entities.items.Trampoline;
-import com.mijuego.entities.enemies.Shooter;
 import com.mijuego.utils.AudioManager;
-
+import com.mijuego.entities.enemies.*;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,7 +31,7 @@ public class LevelManager {
     }
 
     private void initTileset() {
-        tileset = new Tile[10];
+        tileset = new Tile[13];
 
         tileset[0] = new Tile(Tile.EMPTY);
         tileset[1] = new Tile(Tile.SOLID);
@@ -46,6 +43,9 @@ public class LevelManager {
         tileset[7] = new Tile(Tile.JUMPER);
         tileset[8] = new Tile(Tile.TRAMPOLINE);
         tileset[9] = new Tile(Tile.SHOOTER);
+        tileset[10] = new Tile(Tile.RUNNERBOSS);
+        tileset[11] = new Tile(Tile.SHOOTERBOSS);
+        tileset[12] = new Tile(Tile.JUMPERBOSS);
     }
 
     public void loadLevel(int levelNumber) {
@@ -97,6 +97,21 @@ public class LevelManager {
                     else if (tileId == 9) { // Shooter
                         Shooter shooter = new Shooter(c * Tile.SIZE, r * Tile.SIZE, currentTileMap, player);
                         enemies.add(shooter);
+                        currentTileMap.setTileId(r, c, 0); // lo borramos del mapa
+                    }
+                    else if (tileId == 10) {
+                        RunnerBoss runnerboss = new RunnerBoss(c * Tile.SIZE, r * Tile.SIZE, currentTileMap, player);
+                        enemies.add(runnerboss);
+                        currentTileMap.setTileId(r, c, 0); // lo borramos del mapa
+                    }
+                    else if (tileId == 11) {
+                        ShooterBoss shooterboss = new ShooterBoss(c * Tile.SIZE, r * Tile.SIZE, currentTileMap, player);
+                        enemies.add(shooterboss);
+                        currentTileMap.setTileId(r, c, 0); // lo borramos del mapa
+                    }
+                    else if (tileId == 12) {
+                        JumperBoss jumperboss = new JumperBoss(c * Tile.SIZE, r * Tile.SIZE, currentTileMap);
+                        enemies.add(jumperboss);
                         currentTileMap.setTileId(r, c, 0); // lo borramos del mapa
                     }
                 }

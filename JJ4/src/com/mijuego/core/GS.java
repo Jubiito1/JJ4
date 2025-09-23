@@ -5,7 +5,7 @@ public class GS {
     public static final int BASE_WIDTH = 640;
     public static final int BASE_HEIGHT = 360;
 
-    private static int ScaleValue = 1;
+    private static int ScaleValue = 2;
     private static double DoubleScaleValue = ScaleValue;
 
     // Método centralizado de escalado

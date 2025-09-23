@@ -24,6 +24,8 @@ public class GamePanel extends JPanel {
     private LevelManager levelManager;
     private Camera camera;
     private javax.swing.JButton restartButton;
+    int btnW = GS.SC(380);
+    int btnH = GS.SC(120);
 
     private List<Entities> entities;
     private HUD hud;
@@ -154,7 +156,7 @@ public class GamePanel extends JPanel {
 
             for (int x = bgX; x < GS.getVirtualWidth(); x += background.getWidth()) {
                 for (int y = bgY; y < GS.getVirtualHeight(); y += background.getHeight()) {
-                    g2d.drawImage(background, x, y, null);
+                	g2d.drawImage(background, x, y, GS.SC(background.getWidth()), GS.SC(background.getHeight()), null);
                 }
             }
         } else {
@@ -181,9 +183,10 @@ public class GamePanel extends JPanel {
         Player player = levelManager.getPlayer();
         if (player != null && !player.isAlive()) {
         	restartButton.setVisible(true);
-            restartButton.setLocation(
-                (getWidth() - restartButton.getWidth()) / 2,
-                (getHeight() - restartButton.getHeight()) / 2
+        	restartButton.setSize(btnW, btnH);
+        	restartButton.setLocation(
+        	    (getWidth() - btnW) / 2,
+        	    (getHeight() - btnH) / 2
             );
         } else {
             restartButton.setVisible(false);

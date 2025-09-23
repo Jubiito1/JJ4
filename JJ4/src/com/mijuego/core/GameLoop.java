@@ -6,6 +6,9 @@ import com.mijuego.entities.enemies.Goomba;
 import com.mijuego.utils.InputManager;
 import com.mijuego.entities.items.Item;
 import com.mijuego.entities.enemies.Jumper;
+import com.mijuego.entities.enemies.RunnerBoss;
+import com.mijuego.entities.enemies.ShooterBoss;
+import com.mijuego.entities.enemies.JumperBoss;
 
 public class GameLoop implements Runnable {
 
@@ -104,6 +107,9 @@ public class GameLoop implements Runnable {
                     for (Entities e : panel.getEntities()) {
                         if (e instanceof Goomba) ((Goomba)e).checkPlayerCollision(player);
                         if (e instanceof Jumper) ((Jumper)e).checkPlayerCollision(player);
+                        if (e instanceof RunnerBoss) ((RunnerBoss)e).checkPlayerCollision(player);
+                        if (e instanceof ShooterBoss) ((ShooterBoss)e).checkPlayerCollision(player);
+                        if (e instanceof JumperBoss) ((JumperBoss)e).checkPlayerCollision(player);
                     }
                 }
                 

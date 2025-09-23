@@ -2,6 +2,7 @@ package com.mijuego.entities.enemies;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +16,15 @@ import com.mijuego.entities.Entities;
 public class Shooter extends Enemies {
 
     private Player player;
+    
+    private final int DAMAGE_TO_PLAYER = 100;
 
     private int shootCooldown = 0;
     private final int SHOOT_COOLDOWN_FRAMES = 90;
+    
+    private double chaseRange = 10 * Tile.SIZE;  // rango para empezar a perseguir
+    private double loseRange  = 10 * Tile.SIZE;  // rango para dejar de perseguir
+    private boolean chasing = false;
 
     private List<Bullet> bullets = new ArrayList<>();
 
@@ -32,15 +39,27 @@ public class Shooter extends Enemies {
 
         // Revisar si el player lo pisa
         checkPlayerStomp();
-
-        // disparo
-        if (shootCooldown <= 0) {
-            shoot();
-            shootCooldown = SHOOT_COOLDOWN_FRAMES;
-        } else {
-            shootCooldown--;
+        
+        double distX = player.getX() - this.x;
+        
+        if (!chasing && Math.abs(distX) <= chaseRange) {
+            chasing = true; // empieza a perseguir
+        } 
+        else if (chasing && Math.abs(distX) > loseRange) {
+            chasing = false; // deja de perseguir
         }
-
+        
+        if (chasing) {
+            // perseguir al jugador
+            // disparo
+            if (shootCooldown <= 0) {
+                shoot();
+                shootCooldown = SHOOT_COOLDOWN_FRAMES;
+            } else {
+                shootCooldown--;
+            }
+        }
+        
         // actualizar balas
         bullets.removeIf(b -> !b.isAlive());
         for (Bullet b : bullets) {
@@ -65,6 +84,7 @@ public class Shooter extends Enemies {
         g.fillRect((int)(x - camera.getX()), (int)(y - camera.getY()), width, height);
 
         for (Bullet b : bullets) b.draw(g, camera);
+        
     }
 
     private void shoot() {
@@ -102,7 +122,26 @@ public class Shooter extends Enemies {
 
         if (intersects && isAbove && player.getDy() > 0) { // el player está cayendo sobre el enemigo
             takeDamage(this.getHealth()); // mata al enemigo
-            player.setVelY(GS.DSC(-5)); // rebote del player al saltar encima
+            player.setDy(GS.DSC(-5)); // rebote del player al saltar encima
+        }
+        
+        Rectangle enemyBounds = this.getBounds();
+        Rectangle playerBounds = player.getBounds();
+        
+        if (playerBounds.intersects(enemyBounds)) {
+            // Aplicar daño con cooldown
+            player.takeDamage(DAMAGE_TO_PLAYER);
+
+            // Cambiar de dirección al Goomba
+            facingRight = !facingRight;
+            dx = facingRight ? speed : -speed;
+
+            // Opcional: separar al jugador para que no se quede pegado
+            if (player.getX() < x) {
+                player.setX(x - player.getWidth());
+            } else {
+                player.setX(x + width);
+            }
         }
     }
 

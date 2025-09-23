@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import com.mijuego.core.Camera;
 import com.mijuego.entities.Player;
 import com.mijuego.core.GS;
+import com.mijuego.utils.AudioManager;
 
 public class Trampoline extends Item {
     
@@ -38,7 +39,8 @@ public class Trampoline extends Item {
 
         if (getBounds().intersects(player.getBounds())) {
             // Aplica el rebote
-            player.setVelY(bouncePower);
+            player.setDy(bouncePower);
+            AudioManager.playSpringJump();
 
             // Opcional: evitar que se pueda "coleccionar"
             // collected = true; // si quisieras que desaparezca después

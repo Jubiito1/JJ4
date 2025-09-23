@@ -18,6 +18,9 @@ public class Tile {
     public static final int JUMPER = 7;
     public static final int TRAMPOLINE = 8;
     public static final int SHOOTER = 9;
+    public static final int RUNNERBOSS = 10;
+    public static final int SHOOTERBOSS = 11;
+    public static final int JUMPERBOSS = 12;
 
 
     private int type;
@@ -55,6 +58,9 @@ public class Tile {
             case JUMPER: g.setColor(Color.MAGENTA); break; 
             case TRAMPOLINE: g.setColor(Color.CYAN); break;
             case SHOOTER: g.setColor(Color.ORANGE); break;
+            case RUNNERBOSS: g.setColor(Color.CYAN); break;
+            case SHOOTERBOSS: g.setColor(Color.GREEN); break;
+            case JUMPERBOSS: g.setColor(Color.DARK_GRAY);  break;
         }
         g.fillRect(
                 x * SIZE - camera.getX(),

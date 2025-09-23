@@ -26,8 +26,7 @@ public class Player extends Entities {
     private final double GRAVITY = GS.DSC(0.2);
     private final double JUMP_SPEED = GS.DSC(-5);
     private final double MOVE_SPEED = GS.DSC(3);
-
-    // Sprites
+    
     private BufferedImage spriteQuieto;
     private BufferedImage spriteQuieto2;
     private BufferedImage spriteMov;
@@ -40,9 +39,8 @@ public class Player extends Entities {
     private final int ANIM_SPEED = 7; // frames por cambio de sprite
 
     public Player(double x, double y, int width, int height, int health, TileMap map) {
-        super(x, y, width, height, health); 
+        super(x, y, width, height, health); // health inicial en 3
         this.map = map;
-        // Cargar sprites
         spriteQuieto = ResourceManager.loadImage("/assets/sprites/pinguinoQuieto.png");
         spriteMov = ResourceManager.loadImage("/assets/sprites/PinguinoMov.png");
         spriteQuieto2 = ResourceManager.loadImage("/assets/sprites/pinguinoQuieto2.png");
@@ -50,6 +48,8 @@ public class Player extends Entities {
         spriteSalto = ResourceManager.loadImage("/assets/sprites/pinguinoSalto.png");
         spriteSalto2 = ResourceManager.loadImage("/assets/sprites/pinguinoSalto2.png");
     }
+    
+    
 
     @Override
     public void update() {
@@ -65,11 +65,10 @@ public class Player extends Entities {
 
         // 🔹 Movimiento horizontal
         dx = 0;
+
         boolean moving = false;
-        boolean movingRight = false;
-        boolean movingLeft = false;
-        if (InputManager.isLeft())  { dx = -MOVE_SPEED; moving = true; movingLeft = true; lastDirection = "left"; }
-        if (InputManager.isRight()) { dx = MOVE_SPEED; moving = true; movingRight = true; lastDirection = "right"; }
+        if (InputManager.isLeft())  { dx = -MOVE_SPEED; moving = true; lastDirection = "left"; }
+        if (InputManager.isRight()) { dx = MOVE_SPEED; moving = true; lastDirection = "right"; }
         // Animación de pasos
         if (moving && onGround) {
             animCounter++;
@@ -126,12 +125,7 @@ public class Player extends Entities {
         }
     }
     
-    // setter de la velocidad vertical (para power-ups que modifiquen dy)
-    public void setVelY(double velY) {
-        this.dy = velY;
-        this.onGround = false;// fuerza que deje de estar en el suelo
-        AudioManager.playSpringJump();
-    }
+
 
     // Getter
     public int getCoins() {
@@ -167,7 +161,7 @@ public class Player extends Entities {
     @Override
     public void draw(Graphics2D g, Camera camera) {
         if (!isAlive()) {
-            // No dibujar nada si esta muerto
+            // No dibujar nada si está muerto
             return;
         }
         BufferedImage spriteToDraw;
@@ -203,7 +197,8 @@ public class Player extends Entities {
                 drawX,
                 drawY,
                 drawWidth, drawHeight
-            );
+                );
         }
     }
 }
+
